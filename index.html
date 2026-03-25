@@ -39,6 +39,147 @@
       border-radius: 99px;
       letter-spacing: 0.01em;
     }
+
+    /* ── Mobile preview button ── */
+    .preview-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--color-teal-00);
+      color: var(--color-teal-00);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .preview-btn:hover {
+      background: var(--color-teal-00);
+      color: #fff;
+    }
+
+    /* ── Modal overlay ── */
+    #mobile-preview-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.82);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    /* ── Modal top bar ── */
+    .modal-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      max-width: 420px;
+    }
+    .modal-bar-title {
+      flex: 1;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal-open-link {
+      color: var(--color-teal-100);
+      font-size: 0.875rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      white-space: nowrap;
+    }
+    .modal-open-link:hover { text-decoration: none; color: #fff; }
+    .modal-close-btn {
+      background: none;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      cursor: pointer;
+      font-family: inherit;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .modal-close-btn:hover { background: rgba(255,255,255,0.15); }
+
+    /* ── Phone shell ── */
+    .phone-shell {
+      width: 390px;
+      max-width: 100%;
+      background: #1a1a1a;
+      border-radius: 44px;
+      border: 6px solid #333;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.6), inset 0 0 0 2px #555;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      /* Constrain height to viewport */
+      max-height: calc(100vh - 120px);
+    }
+    .phone-notch {
+      background: #111;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .phone-camera {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #333;
+      border: 2px solid #444;
+    }
+    .phone-screen {
+      background: #fff;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      min-height: 0;
+    }
+    .phone-screen iframe {
+      width: 390px;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .phone-home {
+      background: #111;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .phone-home-bar {
+      width: 80px;
+      height: 4px;
+      border-radius: 99px;
+      background: #444;
+    }
+
+    /* Backdrop click zone */
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
   </style>
 </head>
 <body>
@@ -108,6 +249,10 @@
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
             <span class="tag bg-bb-purple-00 text-bb-white-00 text-[0.8rem]" style="background:#eaf9f9;color:#0e5f64">Self-employed</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/self-employment-registration.html','Self-Employment Registration')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/nis-online-registration.html" class="form-card" data-audience="individual">
@@ -120,6 +265,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/nis-online-registration.html','NIS Online Social Security Service Registration')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/direct-deposit.html" class="form-card" data-audience="individual">
@@ -132,6 +281,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/direct-deposit.html','Direct Deposit Form')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/unemployment-benefit.html" class="form-card" data-audience="individual">
@@ -144,6 +297,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/unemployment-benefit.html','Claim for Unemployment Benefit')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/self-employed-contributions.html" class="form-card" data-audience="self-employed">
@@ -156,6 +313,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Self-employed</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/self-employed-contributions.html','Contributions Payment Certificate — Self-employed Persons')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/dp10-contributions.html" class="form-card" data-audience="employer">
@@ -168,6 +329,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag text-[0.8rem]" style="background:#e5e9f2;color:#00164a">Employer</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/dp10-contributions.html','National Insurance Contributions Certificate (D.P. 10)')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
         <a href="Prototypes/termination-certificate.html" class="form-card" data-audience="employer">
@@ -180,6 +345,10 @@
           <div class="flex flex-wrap gap-2 mt-4">
             <span class="tag text-[0.8rem]" style="background:#e5e9f2;color:#00164a">Employer</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/termination-certificate.html','Termination of Services / Layoff Certificate')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
       </div>
@@ -208,6 +377,10 @@
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
             <span class="tag text-[0.8rem]" style="background:#fff9e9;color:#e8a833">60+ only</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/pensioner-declaration.html','Declaration by Pensioners 60 Years and Over')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
       </div>
@@ -236,6 +409,10 @@
             <span class="tag bg-bb-teal-10 text-bb-teal-00 text-[0.8rem]">Individual</span>
             <span class="tag text-[0.8rem]" style="background:#fff0f0;color:#a42c2c">Permit required</span>
           </div>
+          <button class="preview-btn mt-3" onclick="event.preventDefault();event.stopPropagation();openMobilePreview('Prototypes/permit-to-remove.html','Application for a Permit to Remove a Building, House or Boat')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            Preview on mobile
+          </button>
         </a>
 
       </div>
@@ -266,6 +443,23 @@
   </div>
 </main>
 
+<!-- ── Mobile Preview Modal ── -->
+<div id="mobile-preview-modal" role="dialog" aria-modal="true" aria-label="Mobile preview" onclick="handleModalClick(event)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-bar">
+    <span class="modal-bar-title" id="preview-title"></span>
+    <a id="preview-open-link" href="#" target="_blank" rel="noopener" class="modal-open-link">Open full size ↗</a>
+    <button class="modal-close-btn" onclick="closeMobilePreview()" aria-label="Close mobile preview">✕</button>
+  </div>
+  <div class="phone-shell">
+    <div class="phone-notch"><div class="phone-camera"></div></div>
+    <div class="phone-screen">
+      <iframe id="preview-iframe" src="" title="Prototype preview" allow="same-origin"></iframe>
+    </div>
+    <div class="phone-home"><div class="phone-home-bar"></div></div>
+  </div>
+</div>
+
 <!-- Footer -->
 <footer class="bg-bb-blue-100 text-bb-white-00">
   <div class="container py-l text-[1rem]">
@@ -281,6 +475,35 @@
 </footer>
 
 <script>
+/* ── Mobile preview ── */
+function openMobilePreview(url, title) {
+  document.getElementById('preview-title').textContent = title;
+  document.getElementById('preview-open-link').href = url;
+  document.getElementById('preview-iframe').src = url;
+  var modal = document.getElementById('mobile-preview-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  // Focus the close button for keyboard accessibility
+  setTimeout(function() {
+    modal.querySelector('.modal-close-btn').focus();
+  }, 100);
+}
+function closeMobilePreview() {
+  document.getElementById('mobile-preview-modal').style.display = 'none';
+  document.getElementById('preview-iframe').src = '';
+  document.body.style.overflow = '';
+}
+function handleModalClick(e) {
+  // Close if clicking the dark backdrop (not the phone or bar)
+  if (e.target === document.getElementById('mobile-preview-modal')) {
+    closeMobilePreview();
+  }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMobilePreview();
+});
+
+/* ── Filter ── */
 function filterForms(audience) {
   // Update button styles
   document.querySelectorAll('.filter-btn').forEach(function(btn) {

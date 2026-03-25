@@ -59,6 +59,14 @@
     window.scrollTo(0, 0);
   };
 
+  GovBB.getFlow = function () {
+    return (_getFlow ? _getFlow() : _flow).slice();
+  };
+
+  GovBB.getCurrentIndex = function () {
+    return _current;
+  };
+
   GovBB.nav = function (pageId) {
     var flow = _getFlow ? _getFlow() : _flow;
     var idx = flow.indexOf(pageId);

@@ -69,82 +69,54 @@
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: rgba(0,0,0,0.82);
+      background: rgba(0,0,0,0.88);
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 1.5rem;
     }
 
-    /* ── Modal top bar ── */
-    .modal-bar {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      width: 100%;
-      max-width: 420px;
-    }
-    .modal-bar-title {
-      flex: 1;
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .modal-open-link {
-      color: var(--color-teal-100);
-      font-size: 0.875rem;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-      white-space: nowrap;
-    }
-    .modal-open-link:hover { text-decoration: none; color: #fff; }
-    .modal-close-btn {
-      background: none;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: var(--radius-sm);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 0.25rem 0.6rem;
-      cursor: pointer;
-      font-family: inherit;
-      line-height: 1;
-      transition: background 0.15s;
-    }
-    .modal-close-btn:hover { background: rgba(255,255,255,0.15); }
-
-    /* ── Phone shell ── */
-    .phone-shell {
-      width: 390px;
-      max-width: 100%;
-      background: #1a1a1a;
-      border-radius: 44px;
-      border: 6px solid #333;
-      box-shadow: 0 32px 64px rgba(0,0,0,0.6), inset 0 0 0 2px #555;
+    /* ── Left panel: phone ── */
+    .phone-wrapper {
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      /* Constrain height to viewport */
-      max-height: calc(100vh - 120px);
-    }
-    .phone-notch {
-      background: #111;
-      height: 32px;
-      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.75rem;
       flex-shrink: 0;
     }
-    .phone-camera {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #333;
-      border: 2px solid #444;
+
+    /* ── iPhone 14 Pro shell — 393 x 852 viewport ── */
+    .phone-shell {
+      width: 405px;   /* 393 + 12 border */
+      height: 876px;  /* 852 + 24 top/bottom chrome */
+      max-height: calc(100vh - 160px);
+      background: #1c1c1e;
+      border-radius: 50px;
+      border: 6px solid #2c2c2e;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 0 0 2px rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Dynamic Island */
+    .phone-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      border-radius: 20px;
+      background: #000;
+      z-index: 2;
+    }
+    /* Status bar area */
+    .phone-status {
+      height: 54px;
+      background: #fff;
+      flex-shrink: 0;
     }
     .phone-screen {
       background: #fff;
@@ -154,13 +126,13 @@
       min-height: 0;
     }
     .phone-screen iframe {
-      width: 390px;
+      width: 393px;
       height: 100%;
       border: none;
       display: block;
     }
     .phone-home {
-      background: #111;
+      background: #fff;
       height: 28px;
       display: flex;
       align-items: center;
@@ -168,10 +140,119 @@
       flex-shrink: 0;
     }
     .phone-home-bar {
-      width: 80px;
-      height: 4px;
+      width: 140px;
+      height: 5px;
       border-radius: 99px;
-      background: #444;
+      background: #1c1c1e;
+    }
+
+    /* ── Right panel: journey controls ── */
+    .journey-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      color: #fff;
+      max-width: 320px;
+      min-width: 240px;
+    }
+    .journey-panel-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .journey-panel-page {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .journey-page-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-teal-100);
+      text-transform: capitalize;
+    }
+    .journey-progress {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .journey-progress-fill {
+      height: 100%;
+      background: var(--color-teal-100);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+    .journey-nav-btns {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .journey-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--color-teal-100);
+      color: var(--color-teal-100);
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s, opacity 0.15s;
+    }
+    .journey-btn:hover:not(:disabled) { background: var(--color-teal-00); color: #fff; border-color: var(--color-teal-00); }
+    .journey-btn:disabled { opacity: 0.3; cursor: default; }
+    .journey-btn-primary {
+      background: var(--color-teal-00);
+      border-color: var(--color-teal-00);
+      color: #fff;
+    }
+    .journey-btn-primary:hover:not(:disabled) { background: #1a777d; }
+    .journey-open-link {
+      color: var(--color-teal-100);
+      font-size: 0.9rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .journey-open-link:hover { color: #fff; text-decoration: none; }
+    .modal-close-btn {
+      background: none;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.45rem 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .modal-close-btn:hover { background: rgba(255,255,255,0.12); }
+
+    /* ── Page step dots ── */
+    .journey-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .journey-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    .journey-dot.active {
+      background: var(--color-teal-100);
+      transform: scale(1.3);
+    }
+    .journey-dot.visited {
+      background: rgba(255,255,255,0.5);
     }
 
     /* Backdrop click zone */
@@ -179,6 +260,13 @@
       position: absolute;
       inset: 0;
       z-index: -1;
+    }
+
+    /* Responsive: stack vertically on narrow screens */
+    @media (max-width: 860px) {
+      #mobile-preview-modal { flex-direction: column; gap: 1rem; }
+      .journey-panel { max-width: 405px; min-width: unset; }
+      .phone-shell { max-height: calc(100vh - 280px); }
     }
   </style>
 </head>
@@ -443,20 +531,41 @@
   </div>
 </main>
 
-<!-- ── Mobile Preview Modal ── -->
-<div id="mobile-preview-modal" role="dialog" aria-modal="true" aria-label="Mobile preview" onclick="handleModalClick(event)">
+<!-- ── Mobile Journey Modal ── -->
+<div id="mobile-preview-modal" role="dialog" aria-modal="true" aria-label="Mobile journey preview" onclick="handleModalClick(event)">
   <div class="modal-backdrop"></div>
-  <div class="modal-bar">
-    <span class="modal-bar-title" id="preview-title"></span>
-    <a id="preview-open-link" href="#" target="_blank" rel="noopener" class="modal-open-link">Open full size ↗</a>
-    <button class="modal-close-btn" onclick="closeMobilePreview()" aria-label="Close mobile preview">✕</button>
-  </div>
-  <div class="phone-shell">
-    <div class="phone-notch"><div class="phone-camera"></div></div>
-    <div class="phone-screen">
-      <iframe id="preview-iframe" src="" title="Prototype preview" allow="same-origin"></iframe>
+
+  <!-- Phone -->
+  <div class="phone-wrapper">
+    <div class="phone-shell">
+      <div class="phone-island"></div>
+      <div class="phone-status"></div>
+      <div class="phone-screen">
+        <iframe id="preview-iframe" src="" title="Prototype preview"></iframe>
+      </div>
+      <div class="phone-home"><div class="phone-home-bar"></div></div>
     </div>
-    <div class="phone-home"><div class="phone-home-bar"></div></div>
+  </div>
+
+  <!-- Journey controls -->
+  <div class="journey-panel">
+    <div>
+      <p id="preview-title" class="journey-panel-title"></p>
+      <p class="journey-panel-page" style="margin-top:0.5rem">
+        Step <span id="journey-step">1</span> of <span id="journey-total">1</span>
+      </p>
+    </div>
+    <p id="journey-page-name" class="journey-page-name"></p>
+    <div class="journey-progress"><div id="journey-progress-fill" class="journey-progress-fill" style="width:0%"></div></div>
+    <div id="journey-dots" class="journey-dots"></div>
+    <div class="journey-nav-btns">
+      <button id="journey-prev" class="journey-btn" onclick="journeyPrev()" disabled>← Previous</button>
+      <button id="journey-next" class="journey-btn journey-btn-primary" onclick="journeyNext()">Next →</button>
+    </div>
+    <div style="display:flex;gap:1rem;align-items:center;margin-top:0.5rem">
+      <a id="preview-open-link" href="#" target="_blank" rel="noopener" class="journey-open-link">Open full size ↗</a>
+      <button class="modal-close-btn" onclick="closeMobilePreview()" aria-label="Close">✕ Close</button>
+    </div>
   </div>
 </div>
 
@@ -475,32 +584,167 @@
 </footer>
 
 <script>
-/* ── Mobile preview ── */
+/* ── Mobile journey ── */
+var _journeyFlow = [];
+var _journeyIdx = 0;
+
 function openMobilePreview(url, title) {
   document.getElementById('preview-title').textContent = title;
   document.getElementById('preview-open-link').href = url;
-  document.getElementById('preview-iframe').src = url;
+  var iframe = document.getElementById('preview-iframe');
+  iframe.src = url;
+  _journeyFlow = [];
+  _journeyIdx = 0;
+
   var modal = document.getElementById('mobile-preview-modal');
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
-  // Focus the close button for keyboard accessibility
+
+  // When iframe loads, read its flow and set up journey
+  iframe.onload = function() {
+    // Small delay to ensure GovBB.init() has run
+    setTimeout(function() { readIframeFlow(); }, 300);
+  };
+
+  function readIframeFlow() {
+    try {
+      var iw = document.getElementById('preview-iframe').contentWindow;
+      if (!iw || !iw.GovBB) return;
+
+      // If getFlow exists (updated framework), use it
+      if (iw.GovBB.getFlow) {
+        _journeyFlow = iw.GovBB.getFlow();
+        _journeyIdx = iw.GovBB.getCurrentIndex();
+      } else {
+        // Fallback: read the FLOW constant or _flow from the page
+        // Try common global names the prototypes use
+        _journeyFlow = iw.FLOW || [];
+        // If FLOW is a const (not on window), try extracting from page scripts
+        if (_journeyFlow.length === 0) {
+          var scripts = iw.document.querySelectorAll('script:not([src])');
+          for (var i = 0; i < scripts.length; i++) {
+            var m = scripts[i].textContent.match(/(?:const|var|let)\s+FLOW\s*=\s*(\[[^\]]+\])/);
+            if (m) {
+              try { _journeyFlow = JSON.parse(m[1].replace(/'/g, '"')); } catch(e) {}
+              break;
+            }
+          }
+        }
+        _journeyIdx = 0;
+      }
+
+      if (_journeyFlow.length > 0) {
+        buildDots();
+        updateJourney();
+      }
+    } catch(e) {}
+  }
+
+  // Focus next button
   setTimeout(function() {
-    modal.querySelector('.modal-close-btn').focus();
-  }, 100);
+    document.getElementById('journey-next').focus();
+  }, 150);
 }
+
 function closeMobilePreview() {
   document.getElementById('mobile-preview-modal').style.display = 'none';
   document.getElementById('preview-iframe').src = '';
   document.body.style.overflow = '';
+  _journeyFlow = [];
+  _journeyIdx = 0;
 }
+
+function journeyNext() {
+  if (_journeyIdx < _journeyFlow.length - 1) {
+    _journeyIdx++;
+    navigateIframeTo(_journeyIdx);
+    updateJourney();
+  }
+}
+
+function journeyPrev() {
+  if (_journeyIdx > 0) {
+    _journeyIdx--;
+    navigateIframeTo(_journeyIdx);
+    updateJourney();
+  }
+}
+
+function journeyGoTo(idx) {
+  if (idx >= 0 && idx < _journeyFlow.length) {
+    _journeyIdx = idx;
+    navigateIframeTo(idx);
+    updateJourney();
+  }
+}
+
+function navigateIframeTo(idx) {
+  try {
+    var iw = document.getElementById('preview-iframe').contentWindow;
+    if (iw && iw.GovBB) {
+      iw.GovBB.nav(_journeyFlow[idx]);
+    } else if (iw && iw.nav) {
+      iw.nav(_journeyFlow[idx]);
+    }
+  } catch(e) {}
+}
+
+function formatPageName(id) {
+  // "personal-details" → "Personal details"
+  var s = id.replace(/-/g, ' ');
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function buildDots() {
+  var container = document.getElementById('journey-dots');
+  container.innerHTML = '';
+  for (var i = 0; i < _journeyFlow.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'journey-dot';
+    dot.setAttribute('aria-label', 'Go to ' + formatPageName(_journeyFlow[i]));
+    dot.setAttribute('data-idx', i);
+    dot.onclick = (function(idx) {
+      return function() { journeyGoTo(idx); };
+    })(i);
+    container.appendChild(dot);
+  }
+}
+
+function updateJourney() {
+  var total = _journeyFlow.length;
+  var step = _journeyIdx + 1;
+
+  document.getElementById('journey-step').textContent = step;
+  document.getElementById('journey-total').textContent = total;
+  document.getElementById('journey-page-name').textContent = formatPageName(_journeyFlow[_journeyIdx] || '');
+
+  // Progress bar
+  var pct = total > 1 ? (_journeyIdx / (total - 1)) * 100 : 100;
+  document.getElementById('journey-progress-fill').style.width = pct + '%';
+
+  // Dots
+  var dots = document.querySelectorAll('.journey-dot');
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].classList.toggle('active', i === _journeyIdx);
+    dots[i].classList.toggle('visited', i < _journeyIdx);
+  }
+
+  // Buttons
+  document.getElementById('journey-prev').disabled = _journeyIdx === 0;
+  document.getElementById('journey-next').disabled = _journeyIdx >= total - 1;
+}
+
 function handleModalClick(e) {
-  // Close if clicking the dark backdrop (not the phone or bar)
   if (e.target === document.getElementById('mobile-preview-modal')) {
     closeMobilePreview();
   }
 }
+
 document.addEventListener('keydown', function(e) {
+  if (document.getElementById('mobile-preview-modal').style.display !== 'flex') return;
   if (e.key === 'Escape') closeMobilePreview();
+  if (e.key === 'ArrowRight') journeyNext();
+  if (e.key === 'ArrowLeft') journeyPrev();
 });
 
 /* ── Filter ── */

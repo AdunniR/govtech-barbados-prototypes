@@ -616,18 +616,18 @@ function openMobilePreview(url, title) {
         _journeyFlow = iw.GovBB.getFlow();
         _journeyIdx = iw.GovBB.getCurrentIndex();
       } else {
-        // Fallback: read the FLOW constant or _flow from the page
-        // Try common global names the prototypes use
-        _journeyFlow = iw.FLOW || [];
-        // If FLOW is a const (not on window), try extracting from page scripts
-        if (_journeyFlow.length === 0) {
-          var scripts = iw.document.querySelectorAll('script:not([src])');
-          for (var i = 0; i < scripts.length; i++) {
-            var m = scripts[i].textContent.match(/(?:const|var|let)\s+FLOW\s*=\s*(\[[^\]]+\])/);
-            if (m) {
-              try { _journeyFlow = JSON.parse(m[1].replace(/'/g, '"')); } catch(e) {}
-              break;
-            }
+        // Fallback: parse flow from the prototype's script tags
+        _journeyFlow = [];
+        var scripts = iw.document.querySelectorAll('script:not([src])');
+        for (var i = 0; i < scripts.length; i++) {
+          var text = scripts[i].textContent;
+          // Match: const FLOW = [...] or flow: [...]
+          var m = text.match(/(?:const\s+FLOW\s*=|flow\s*:)\s*\[([^\]]+)\]/);
+          if (m) {
+            try {
+              _journeyFlow = JSON.parse('[' + m[1].replace(/'/g, '"') + ']');
+            } catch(e) {}
+            break;
           }
         }
         _journeyIdx = 0;

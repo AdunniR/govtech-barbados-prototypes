@@ -358,7 +358,7 @@ function validate(pageId) {
     if (!D['business-name']) errors.push({ id: 'business-name', msg: 'Business name – Enter your business name' });
     if (!D['employer-street']) errors.push({ id: 'employer-street', msg: 'Street address – Enter your street address' });
     if (!D['employer-parish']) errors.push({ id: 'employer-parish', msg: 'Parish – Select your parish' });
-    if (!D['employer-postal']) errors.push({ id: 'employer-postal', msg: 'Postal code – Enter your postal code' });
+    if (D['employer-postal'] && D['employer-postal'].trim() && !/^BB\d{5}$/i.test(D['employer-postal'].trim())) errors.push({ id: 'employer-postal', msg: 'Postal code – Enter a valid postal code, for example BB11000' });
   }
   if (pageId === 'contributions-period') {
     if (!D['contrib-year'] || D['contrib-year'].length !== 4) errors.push({ id: 'contrib-year', msg: 'Contribution year – Enter a 4-digit year' });

@@ -499,14 +499,13 @@ function validate(pageId) {
 
     if (!D['street-address']) errors.push({ id: 'street-address', msg: 'Street address – Enter your street address' });
     if (!D['parish']) errors.push({ id: 'parish', msg: 'Parish – Select your parish' });
-    if (!D['postal-code']) errors.push({ id: 'postal-code', msg: 'Postal code – Enter your postal code' });
-    else if (!/^BB\d{5}$/i.test(D['postal-code'].trim())) errors.push({ id: 'postal-code', msg: 'Postal code – Enter a valid Barbados postal code, for example BB11000' });
+    if (D['postal-code'] && D['postal-code'].trim() && !/^BB\d{5}$/i.test(D['postal-code'].trim())) errors.push({ id: 'postal-code', msg: 'Postal code – Enter a valid Barbados postal code, for example BB11000' });
     if (!D['country']) errors.push({ id: 'country', msg: 'Country – Enter your country' });
 
     if (!D['mailing-same']) {
       if (!D['mailing-street']) errors.push({ id: 'mailing-street', msg: 'Mailing street address – Enter your mailing street address' });
       if (!D['mailing-parish']) errors.push({ id: 'mailing-parish', msg: 'Mailing parish – Select your mailing parish' });
-      if (!D['mailing-postal']) errors.push({ id: 'mailing-postal', msg: 'Mailing postal code – Enter your mailing postal code' });
+      if (D['mailing-postal'] && D['mailing-postal'].trim() && !/^BB\d{5}$/i.test(D['mailing-postal'].trim())) errors.push({ id: 'mailing-postal', msg: 'Mailing postal code – Enter a valid postal code, for example BB11000' });
       if (!D['mailing-country']) errors.push({ id: 'mailing-country', msg: 'Mailing country – Enter your mailing country' });
     }
 

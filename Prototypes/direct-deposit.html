@@ -284,7 +284,7 @@ function validate(pageId) {
     if (!D['nrn']) errors.push({ id: 'nrn', msg: 'National Registration Number – Enter your NRN' });
     if (!D['street-address']) errors.push({ id: 'street-address', msg: 'Street address – Enter your street address' });
     if (!D['parish']) errors.push({ id: 'parish', msg: 'Parish – Select your parish' });
-    if (!D['postal-code']) errors.push({ id: 'postal-code', msg: 'Postal code – Enter your postal code' });
+    if (D['postal-code'] && D['postal-code'].trim() && !/^BB\d{5}$/i.test(D['postal-code'].trim())) errors.push({ id: 'postal-code', msg: 'Postal code – Enter a valid postal code, for example BB11000' });
     if (!D['contact-email']) errors.push({ id: 'contact-email', msg: 'Email address – Enter your email address' });
     if (!D['telephone'] && !D['cellular']) errors.push({ id: 'telephone', msg: 'Telephone – Enter at least one phone number' });
   }

@@ -341,9 +341,7 @@ function validate(pageId) {
     if (!D['parish'] || !D['parish'].trim()) {
       errors.push({ id: 'parish', msg: 'Parish – choose your parish' });
     }
-    if (!D['postal-code'] || !D['postal-code'].trim()) {
-      errors.push({ id: 'postal-code', msg: 'Postal code – enter your postal code' });
-    } else if (!/^BB\d{5}$/i.test(D['postal-code'].trim())) {
+    if (D['postal-code'] && D['postal-code'].trim() && !/^BB\d{5}$/i.test(D['postal-code'].trim())) {
       errors.push({ id: 'postal-code', msg: 'Postal code – enter a valid postal code, for example BB11000' });
     }
     if (!D['contact-number'] || !D['contact-number'].trim()) {

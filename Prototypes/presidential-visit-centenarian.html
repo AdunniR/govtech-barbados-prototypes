@@ -39,7 +39,9 @@
 
 <!-- Main -->
 <main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="container py-l">
+    <div class="max-w-3xl" id="app"></div>
+  </div>
 </main>
 
 <!-- Feedback banner: shown only on start and confirmation pages -->
@@ -136,8 +138,7 @@ function formatDate(prefix) {
 }
 
 function centenarianFullName() {
-  const d = GovBB.D;
-  return [d['cen-first'], d['cen-middle'], d['cen-last']].filter(Boolean).join(' ') || '—';
+  return GovBB.D['cen-fullname'] || '—';
 }
 
 function addressDisplay(prefix) {
@@ -151,8 +152,7 @@ function visitAddressDisplay() {
 }
 
 function contactFullName() {
-  const d = GovBB.D;
-  return [d['contact-first'], d['contact-middle'], d['contact-last']].filter(Boolean).join(' ') || '—';
+  return GovBB.D['contact-fullname'] || '—';
 }
 
 function checkTick(checked) {
@@ -177,7 +177,6 @@ const PAGES = {
 
       <div class="border-l-4 border-bb-yellow-00 pl-s bg-bb-yellow-10 py-s rounded-sm">
         <p class="text-[1.25rem] leading-normal font-bold">You must submit this request at least 3 months before the birthday.</p>
-        <p class="text-[1.25rem] leading-normal mt-1">Requests received less than 3 months before the birthday may not be considered.</p>
       </div>
 
       <div class="space-y-3">
@@ -228,13 +227,10 @@ const PAGES = {
   /* ── Centenarian info: name + DOB + sex ── */
   'centenarian-info': () => `${hideFeedbackBanner()}
     <form novalidate>
-      ${GovBB.backLink()}
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Tell us about the centenarian</h1>
       <div class="space-y-8">
-        ${GovBB.textField('cen-first', 'First name')}
-        ${GovBB.textField('cen-middle', 'Middle name(s) (optional)', { hint: 'Leave blank if there are none' })}
-        ${GovBB.textField('cen-last', 'Last name')}
+        ${GovBB.textField('cen-fullname', 'Full name')}
         ${GovBB.dateField('cen-dob', 'Date of birth', 'For example, 27 03 1925')}
         ${GovBB.radioGroup('centenarian-gender', 'What is the sex of the centenarian?', ['Male', 'Female'], { hint: 'This determines which documents you need to upload.' })}
         ${GovBB.continueBtn()}
@@ -246,7 +242,6 @@ const PAGES = {
     const showVisit = GovBB.D['visit-same'] && GovBB.D['visit-same'] !== 'Yes';
     return `${hideFeedbackBanner()}
     <form novalidate>
-      ${GovBB.backLink()}
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Where does the centenarian live?</h1>
       <div class="space-y-8">
@@ -257,7 +252,7 @@ const PAGES = {
           <p class="font-bold text-[1.25rem] text-bb-mid-grey-00">Address for the visit</p>
           ${addressBlock('visit')}
         </div>` : ''}
-        ${GovBB.continueBtn()}
+        ${btnGroup()}
       </div>
     </form>`;
   },
@@ -265,18 +260,15 @@ const PAGES = {
   /* ── Contact person + email (merged) ── */
   'visit-and-contact': () => `${hideFeedbackBanner()}
     <form novalidate>
-      ${GovBB.backLink()}
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Who should we contact about the arrangements?</h1>
       <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-6">Give us the details of the person the Office of the President should contact.</p>
       <div class="space-y-8">
-        ${GovBB.textField('contact-first', 'First name')}
-        ${GovBB.textField('contact-middle', 'Middle name(s) (optional)', { hint: 'Leave blank if there are none' })}
-        ${GovBB.textField('contact-last', 'Last name')}
+        ${GovBB.textField('contact-fullname', 'Full name')}
         ${addressBlock('contact')}
         ${GovBB.telField('contact-tel', 'Phone number', { hint: 'For example, 246-555-1234', placeholder: '246-' })}
         ${GovBB.emailField('contact-email', 'Email address', { hint: 'We\'ll send you a confirmation of your request. For example, name@example.com' })}
-        ${GovBB.continueBtn()}
+        ${btnGroup()}
       </div>
     </form>`,
 
@@ -287,7 +279,6 @@ const PAGES = {
     const marriageFile = GovBB.D['marriage-cert-file'] || '';
     return `${hideFeedbackBanner()}
     <form novalidate>
-      ${GovBB.backLink()}
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-4">Upload your documents</h1>
       <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-8">Upload a scan or clear photo. Accepted formats: PDF, JPG, PNG. Max 5MB per file.</p>
@@ -317,14 +308,13 @@ const PAGES = {
           <p class="font-bold">If any names differ across documents</p>
           <p class="text-bb-mid-grey-00">An affidavit may be required. The Office of the President will contact you if this is needed.</p>
         </div>
-        ${GovBB.continueBtn()}
+        ${btnGroup()}
       </div>
     </form>`;
   },
 
   /* ── Check your answers ── */
   'check': () => `${hideFeedbackBanner()}
-    ${GovBB.backLink()}
     <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending</h1>
     <div class="space-y-8">
       <section>
@@ -358,13 +348,12 @@ const PAGES = {
           ${GovBB.D['centenarian-gender'] === 'Female' ? GovBB.summaryRow('Marriage certificate(s)', GovBB.D['marriage-cert-file'] || 'Not uploaded', 'upload-documents') : ''}
         </dl>
       </section>
-      ${GovBB.continueBtn('Continue to declaration')}
+      ${btnGroup('Continue to declaration')}
     </div>`,
 
   /* ── Declaration ── */
   'declaration': () => `${hideFeedbackBanner()}
     <form novalidate>
-      ${GovBB.backLink()}
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
       <div class="bg-bb-grey-00 rounded-sm p-s mb-8 space-y-3">
@@ -389,24 +378,38 @@ const PAGES = {
           </label>
         </div>
       </div>
-      ${GovBB.continueBtn('Submit request')}
+      ${btnGroup('Submit request')}
     </form>`,
 
   /* ── Confirmation ── */
-  'confirmation': () => `${showFeedbackBanner()}
+  'confirmation': () => {
+    const ref = window.__refNumber || ('PVC-' + Math.random().toString(36).substring(2,8).toUpperCase());
+    window.__refNumber = ref;
+    return `${showFeedbackBanner()}
     <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
+      <div class="bg-bb-teal-00 text-bb-white-00 rounded-sm p-xm">
         <h1 class="font-bold text-[3.5rem] leading-[1.15]">Request submitted</h1>
-        <p class="text-[1.5rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'PVC-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
+        <p class="text-[1.25rem] leading-normal mt-s">Your reference number is</p>
+        <p class="text-[2rem] font-bold tracking-wide mt-xs">${ref}</p>
       </div>
-      <div class="space-y-4">
+      <div class="space-y-3">
         <h2 class="font-bold text-[1.5rem]">What happens next</h2>
         <p class="text-[1.25rem] leading-normal">The Office of the President will review your request and contact the person you named to discuss the arrangements.</p>
         <p class="text-[1.25rem] leading-normal">If you don't hear back within 4 weeks, contact the Office of the President directly.</p>
       </div>
-    </div>`
+    </div>`;
+  }
 };
+
+/* ───────── Previous + Continue button group ───────── */
+const PREV_BTN_CLS = 'relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c8cdd4] active:bg-[#b0b5bc] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100 focus-visible:rounded-sm';
+
+function btnGroup(continueLabel) {
+  return `<div class="mt-8 flex gap-4 items-center flex-wrap">
+    <button type="button" onclick="back()" class="${PREV_BTN_CLS}">Previous</button>
+    <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">${continueLabel || 'Continue'}</button>
+  </div>`;
+}
 
 /* ───────── File upload helper ───────── */
 function handleFileUpload(inputId, dataKey) {
@@ -429,15 +432,26 @@ function validate(pageId) {
   const errors = [];
 
   if (pageId === 'centenarian-info') {
-    if (!D['cen-first']) errors.push({ id: 'cen-first', msg: 'First name – Enter the centenarian\'s first name' });
-    if (!D['cen-last'])  errors.push({ id: 'cen-last',  msg: 'Last name – Enter the centenarian\'s last name' });
+    if (!D['cen-fullname']) errors.push({ id: 'cen-fullname', msg: 'Full name – Enter the centenarian\'s full name' });
     const day = parseInt(D['cen-dob-day'], 10), month = parseInt(D['cen-dob-month'], 10), year = parseInt(D['cen-dob-year'], 10);
     if (!D['cen-dob-day'] || !D['cen-dob-month'] || !D['cen-dob-year']) {
       errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a complete date of birth' });
     } else if (isNaN(day) || isNaN(month) || isNaN(year) || day < 1 || day > 31 || month < 1 || month > 12 || year < 1900) {
       errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a valid date of birth' });
-    } else if (new Date(year, month - 1, day) >= new Date()) {
-      errors.push({ id: 'cen-dob-day', msg: 'Date of birth – The date of birth must be in the past' });
+    } else {
+      const parsed = new Date(year, month - 1, day);
+      if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+        errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a real date, for example 27 03 1925' });
+      } else if (parsed >= new Date()) {
+        errors.push({ id: 'cen-dob-day', msg: 'Date of birth – The date of birth must be in the past' });
+      } else {
+        const today = new Date();
+        let age = today.getFullYear() - year;
+        if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
+        if (age < 99 || age > 100) {
+          errors.push({ id: 'cen-dob-day', msg: 'Date of birth – The centenarian must be turning or have turned 100. Check the date of birth is correct.' });
+        }
+      }
     }
     if (!D['centenarian-gender']) errors.push({ id: 'centenarian-gender', msg: 'Sex – Choose male or female' });
   }
@@ -453,8 +467,7 @@ function validate(pageId) {
   }
 
   if (pageId === 'visit-and-contact') {
-    if (!D['contact-first'])  errors.push({ id: 'contact-first',  msg: 'First name – Enter the contact person\'s first name' });
-    if (!D['contact-last'])   errors.push({ id: 'contact-last',   msg: 'Last name – Enter the contact person\'s last name' });
+    if (!D['contact-fullname']) errors.push({ id: 'contact-fullname', msg: 'Full name – Enter the contact person\'s full name' });
     if (!D['contact-line1'])  errors.push({ id: 'contact-line1',  msg: 'Address line 1 – Enter the contact person\'s address' });
     if (!D['contact-parish']) errors.push({ id: 'contact-parish', msg: 'Parish – Choose a parish' });
     if (!D['contact-tel'])    errors.push({ id: 'contact-tel',    msg: 'Phone number – Enter a phone number' });

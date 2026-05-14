@@ -278,6 +278,9 @@ const PAGES = {
         ${styledSelect('religion', 'Religion', ['Christian', 'Islam', 'Rastafarianism', 'Hindu', 'Other'], {
           placeholder: 'Select a religion'
         })}
+        <div data-show-when-name="religion" data-show-when-value="Other" style="display:${GovBB.D['religion'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+          ${GovBB.textField('religion-other', 'Please describe your child\'s religion')}
+        </div>
         ${GovBB.continueBtn()}
       </div>
     </form>`,
@@ -524,7 +527,7 @@ const PAGES = {
             ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'camper-details')}
             ${GovBB.summaryRow('National ID Number', GovBB.D['nid'] || '—', 'camper-details')}
             ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '—', 'camper-details')}
-            ${GovBB.summaryRow('Religion', GovBB.D['religion'] || '—', 'camper-details')}
+            ${GovBB.summaryRow('Religion', GovBB.D['religion'] === 'Other' ? (GovBB.D['religion-other'] || 'Other') : (GovBB.D['religion'] || '—'), 'camper-details')}
           </dl>
         </div>
 
@@ -639,6 +642,8 @@ function validate(pageId) {
     if (!D['nid'] || !D['nid'].trim())  errors.push({ id: 'nid', msg: 'Enter your child\'s National ID Number' });
     if (!D['gender'])                   errors.push({ id: 'gender', msg: 'Select your child\'s gender' });
     if (!D['religion'])                 errors.push({ id: 'religion', msg: 'Select your child\'s religion' });
+    if (D['religion'] === 'Other' && (!D['religion-other'] || !D['religion-other'].trim()))
+      errors.push({ id: 'religion-other', msg: 'Religion – Describe your child\'s religion' });
   }
 
   if (pageId === 'camper-health') {

@@ -133,8 +133,9 @@
     <div id="tab-shelters" class="tab-panel active" role="tabpanel" aria-labelledby="btn-shelters">
 
       <!-- Search and filters -->
-      <div class="flex flex-col sm:flex-row gap-s mb-m">
-        <div class="flex-1">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-s mb-m">
+        <!-- Search -->
+        <div class="flex-1 min-w-[200px]">
           <label for="shelter-search" class="block text-[1rem] font-bold text-bb-black-00 mb-xs">Search by name or address</label>
           <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
             <svg class="ml-s shrink-0 text-bb-mid-grey-00" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -143,7 +144,8 @@
               oninput="filterShelters()" autocomplete="off" />
           </div>
         </div>
-        <div class="sm:w-56">
+        <!-- Parish -->
+        <div class="sm:w-48">
           <label for="parish-filter" class="block text-[1rem] font-bold text-bb-black-00 mb-xs">Parish</label>
           <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
             <select id="parish-filter" onchange="filterShelters()"
@@ -157,6 +159,23 @@
             <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-bb-mid-grey-00" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
         </div>
+        <!-- Shelter status -->
+        <div class="sm:w-44">
+          <label for="status-filter" class="block text-[1rem] font-bold text-bb-black-00 mb-xs">Shelter status</label>
+          <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+            <select id="status-filter" onchange="filterShelters()"
+              class="w-full p-s outline-none bg-transparent text-[1.125rem] cursor-pointer appearance-none pr-8">
+              <option value="">All statuses</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="advisory">Advisory</option>
+              <option value="watch">Watch</option>
+              <option value="warning">Warning</option>
+            </select>
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-bb-mid-grey-00" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <!-- Wheelchair -->
         <div class="sm:w-auto flex items-end pb-0.5">
           <label class="flex items-center gap-3 cursor-pointer select-none">
             <div class="relative inline-flex size-8 shrink-0 border-2 border-bb-black-00 rounded-sm bg-bb-white-00 hover:shadow-form-hover">
@@ -452,6 +471,26 @@ var SHELTERS = [
 
 var STORMS = ['Andrea','Barry','Chantal','Dean','Erin','Felix','Gabrielle','Harold','Ingrid','Jerry','Karen','Lorenzo','Melissa*','Nestor','Olga','Pablo','Rebekah','Sebastien','Tanya','Van','Wendy'];
 
+/* ─── Per-shelter status (DEM-controlled via CMS in production) ─── */
+var SHELTER_STATUSES = {};
+SHELTERS.forEach(function(s) { SHELTER_STATUSES[s.id] = 'closed'; });
+
+function getShelterStatus(id) { return SHELTER_STATUSES[id] || 'closed'; }
+
+function setAllShelterStatuses(status) {
+  SHELTERS.forEach(function(s) { SHELTER_STATUSES[s.id] = status; });
+  filterShelters();
+}
+
+/* ─── Shelter status style config ─── */
+var SHELTER_STATUS_CONFIG = {
+  closed:  { label:'Closed',   pill:'background:#e0e4e9;color:#595959;',  border:'#e0e4e9', dot:'#595959',  callout:'' },
+  advisory:{ label:'Advisory', pill:'background:#e5e9f2;color:#00267f;',  border:'#99a8cc', dot:'#00267f',  callout:'' },
+  watch:   { label:'Watch',    pill:'background:#ffe9a8;color:#6b4a00;',  border:'#e8a833', dot:'#e8a833',  callout:'' },
+  warning: { label:'Warning',  pill:'background:#ffc4c4;color:#a42c2c;',  border:'#a42c2c', dot:'#a42c2c',  callout:'' },
+  open:    { label:'OPEN',     pill:'background:#e9f9f3;color:#00654a;font-weight:700;', border:'#1fbf84', dot:'#00654a', callout:'Go here now if you need shelter.' },
+};
+
 var STATUS_CONFIG = {
   normal:  { icon:'✓',  label:'No active storm',                       message:'There is no hurricane watch or warning in effect for Barbados. Use this time to get prepared.' },
   advisory:{ icon:'ℹ',  label:'Tropical storm advisory',               message:'A tropical storm advisory is in effect. Monitor updates from DEM and Barbados Meteorological Services.' },
@@ -477,20 +516,26 @@ function renderMarkers(shelters) {
   markerGroup.clearLayers();
   markers = {};
   shelters.forEach(function(s) {
-    var color = s.wheelchair ? '#0e5f64' : '#00267f';
+    var st  = getShelterStatus(s.id);
+    var cfg = SHELTER_STATUS_CONFIG[st] || SHELTER_STATUS_CONFIG.closed;
+    var size = st === 'open' ? 18 : 13;
+    var ring = st === 'open' ? 'box-shadow:0 0 0 4px rgba(0,101,74,0.25),0 1px 4px rgba(0,0,0,0.4);' : 'box-shadow:0 1px 4px rgba(0,0,0,0.4);';
     var icon = L.divIcon({
       className: '',
-      html: '<div style="width:14px;height:14px;border-radius:50%;background:'+color+';border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>',
-      iconSize:[14,14], iconAnchor:[7,7]
+      html: '<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+cfg.dot+';border:2px solid white;'+ring+'"></div>',
+      iconSize:[size,size], iconAnchor:[size/2,size/2]
     });
     var m = L.marker([s.lat, s.lng], { icon: icon }).addTo(markerGroup);
-    var wc = s.wheelchair ? ' <span style="background:#eaf9f9;color:#0e5f64;padding:2px 6px;border-radius:4px;font-size:12px;">♿ Accessible</span>' : '';
+    var wc  = s.wheelchair ? ' <span style="background:#eaf9f9;color:#0e5f64;padding:2px 6px;border-radius:4px;font-size:12px;">♿</span>' : '';
+    var stBadge = '<span style="'+cfg.pill+'padding:2px 8px;border-radius:4px;font-size:12px;margin-left:4px;">'+cfg.label+'</span>';
+    var callout = cfg.callout ? '<br><strong style="color:'+cfg.dot+';font-size:12px;">'+cfg.callout+'</strong>' : '';
     m.bindPopup(
-      '<strong style="font-size:14px;">'+s.name+'</strong>'+wc+
+      '<strong style="font-size:14px;">'+s.name+'</strong>'+wc+stBadge+
       '<br><span style="color:#595959;font-size:13px;">'+s.address+', '+s.parish+'</span>'+
+      callout+
       '<br><a href="tel:'+s.phone+'" style="color:#0e5f64;font-size:13px;">'+s.phone+'</a>'+
       '<br><a href="https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng+'" target="_blank" rel="noopener" style="color:#0e5f64;font-size:12px;text-decoration:underline;">Get directions ↗</a>',
-      { maxWidth: 220 }
+      { maxWidth: 240 }
     );
     markers[s.id] = m;
   });
@@ -521,16 +566,27 @@ function renderCards(shelters) {
   countEl.textContent = 'Showing ' + shelters.length + ' of 31 shelter' + (shelters.length !== 1 ? 's' : '');
 
   container.innerHTML = shelters.map(function(s) {
-    var wc = s.wheelchair
+    var st  = getShelterStatus(s.id);
+    var cfg = SHELTER_STATUS_CONFIG[st] || SHELTER_STATUS_CONFIG.closed;
+    var wc  = s.wheelchair
       ? '<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.875rem;background:#eaf9f9;color:#0e5f64;padding:2px 8px;border-radius:4px;font-weight:500;">♿ Wheelchair accessible</span>'
       : '<span style="display:inline-flex;font-size:0.875rem;background:#e0e4e9;color:#595959;padding:2px 8px;border-radius:4px;">Not accessible</span>';
-    return '<div style="border:2px solid #e0e4e9;border-radius:6px;padding:1rem;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s;" onmouseover="this.style.borderColor=\'#0e5f64\'" onmouseout="this.style.borderColor=\'#e0e4e9\'">' +
+    var callout = (st === 'open')
+      ? '<div style="margin-top:4px;padding:8px 10px;border-radius:4px;background:#e9f9f3;border:1px solid #1fbf84;font-size:0.9375rem;color:#00654a;font-weight:600;">🏠 This shelter is open. Go here now if you need to evacuate.</div>'
+      : (st === 'warning' || st === 'watch')
+        ? '<div style="margin-top:4px;padding:8px 10px;border-radius:4px;background:#fff9e9;border:1px solid #e8a833;font-size:0.875rem;color:#595959;">Do not go yet — wait for DEM to announce this shelter is open.</div>'
+        : '';
+    return '<div style="border:2px solid '+cfg.border+';border-left:5px solid '+cfg.border+';border-radius:6px;padding:1rem;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(0,0,0,0.08)\'" onmouseout="this.style.boxShadow=\'\'">' +
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">' +
         '<strong style="font-size:1.125rem;line-height:1.3;">' + s.name + '</strong>' +
-        '<span style="font-size:0.75rem;font-weight:500;color:#595959;background:#e0e4e9;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;">' + s.parish + '</span>' +
+        '<div style="display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">' +
+          '<span style="font-size:0.75rem;'+cfg.pill+'padding:3px 8px;border-radius:4px;white-space:nowrap;">' + cfg.label + '</span>' +
+          '<span style="font-size:0.75rem;font-weight:500;color:#595959;background:#e0e4e9;padding:3px 8px;border-radius:4px;white-space:nowrap;">' + s.parish + '</span>' +
+        '</div>' +
       '</div>' +
       '<p style="color:#595959;font-size:1rem;margin:0;">' + s.address + '</p>' +
       wc +
+      callout +
       '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">' +
         '<a href="tel:'+s.phone+'" style="display:inline-flex;align-items:center;gap:4px;font-size:1rem;color:#0e5f64;text-decoration:underline;text-underline-offset:2px;font-weight:500;">📞 '+s.phone+'</a>' +
         '<button onclick="panTo('+s.id+')" style="display:inline-flex;align-items:center;gap:4px;font-size:1rem;color:#0e5f64;text-decoration:underline;text-underline-offset:2px;font-weight:500;background:none;border:none;cursor:pointer;padding:0;">📍 Show on map</button>' +
@@ -546,11 +602,13 @@ function renderCards(shelters) {
 function filterShelters() {
   var q  = document.getElementById('shelter-search').value.toLowerCase().trim();
   var p  = document.getElementById('parish-filter').value;
+  var st = document.getElementById('status-filter').value;
   var wc = document.getElementById('wheelchair-filter').checked;
   document.getElementById('wc-check').style.display = wc ? 'flex' : 'none';
   var filtered = SHELTERS.filter(function(s) {
     return (!q  || s.name.toLowerCase().includes(q) || s.address.toLowerCase().includes(q) || s.parish.toLowerCase().includes(q))
         && (!p  || s.parish === p)
+        && (!st || getShelterStatus(s.id) === st)
         && (!wc || s.wheelchair);
   });
   renderCards(filtered);
@@ -579,10 +637,22 @@ function setStatus(status) {
   var time = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
   var date = now.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
   document.getElementById('banner-updated').textContent = 'Last updated: ' + date + ', ' + time;
+
+  // Sync all shelter statuses to match the DEM global status
+  var shelterStatus = (status === 'normal') ? 'closed' : status;
+  setAllShelterStatuses(shelterStatus);
+
+  // Update shelter notice
   var notice = document.getElementById('shelter-notice');
   if (status === 'open') {
     notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #1fbf84;background:#e9f9f3;font-size:1rem;';
     notice.innerHTML = '<strong>Shelters are open.</strong> Go to your nearest shelter now if you need to evacuate.';
+  } else if (status === 'warning') {
+    notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #a42c2c;background:#fff0f0;font-size:1rem;';
+    notice.innerHTML = '<strong>Hurricane warning in effect.</strong> Prepare now. Do not go to a shelter until DEM says it is open.';
+  } else if (status === 'watch') {
+    notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #e8a833;background:#fff9e9;font-size:1rem;';
+    notice.innerHTML = '<strong>Hurricane watch in effect.</strong> Get ready to shelter. Wait for DEM to open shelters before you go.';
   } else {
     notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #e8a833;background:#fff9e9;font-size:1rem;';
     notice.innerHTML = '<strong>Important:</strong> This shows your nearest shelter. Do not go there until DEM announces it is open.';

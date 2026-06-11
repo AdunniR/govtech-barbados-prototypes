@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claim for examination duties – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});html+='</ul></div>';document.getElementById('app').insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+const DEPT='Ministry of Education, Technological and Vocational Training';
+function cap(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+DEPT+'</p>';}
+function sel(id,field,opts,ph){ph=ph||'Select one';return '<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+field+'"><option value="">'+ph+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(GovBB.D[field]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>';}
+function rad(name,opts){return opts.map(function(o,i){return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+name+'-'+i+'" name="'+name+'" data-field="'+name+'" value="'+o+'"'+(GovBB.D[name]===o?' checked':'')+'/><label class="govbb-radio-item__label" for="'+name+'-'+i+'">'+o+'</label></div>';}).join('');}
+function chk(id,field,label){return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="'+id+'" name="'+id+'" data-field="'+field+'"'+(GovBB.D[field]?' checked':'')+'/><label class="govbb-checkbox-item__label" for="'+id+'">'+label+'</label></div>';}
+function inp(id,field,val,type){type=type||'text';return '<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+field+'" value="'+(val||'')+'"'+(type==='email'?' autocomplete="email"':'')+'/></div>';}
+function btns(){return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Continue</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div>';}
+
+const BANKS=['Bank of Nova Scotia','Royal Bank of Canada (RBC)','Republic Bank','First Citizens Bank','CIBC Caribbean','Sagicor Bank','Barbados Public Workers Co-operative Credit Union','City of Bridgetown Co-operative Credit Union','Barbados Teachers Co-operative Credit Union','The Postal Co-operative Credit Union','Other'];
+const EXAMS=['2026 CXC – January','2026 CXC – May/June','2026 CAPE – June','2026 CPEA','Other'];
+const DUTY_TYPES_B=['Supervisor','Assistant Supervisor','Chief Invigilator','Invigilator','Assessor (Human Ecology)'];
+const DUTY_TYPES_D=['External Examiner','Oral Examiner','Reader / Writer / Interpreter','Art Model','Dictation','Moderator'];
+
+function getFlow(){
+  var type=GovBB.D['duty-category'];
+  var flow=['start','claimant-details','duty-category'];
+  if(type==='Supervision or invigilation')flow.push('supervision-duties');
+  if(type==='Practical setup or conduct')flow.push('practical-duties');
+  if(type==='Hourly or passage-based duties')flow.push('hourly-duties');
+  flow.push('banking','declaration','check','confirmation');
+  return flow;
+}
+
+const PAGES={
+'start':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Claim for examination duties</h1><hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to claim payment for duties you performed during CXC, CAPE, or other national examinations.</p>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+<ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+<li style="margin-bottom:var(--spacing-xs);">National Registration Number (NRN)</li>
+<li style="margin-bottom:var(--spacing-xs);">Details of each duty (exam, role, date, duration)</li>
+<li style="margin-bottom:var(--spacing-xs);">Your bank account details</li>
+</ul>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body"><strong>Note:</strong> Duties of more than 3 hours are paid as a full day. Multiple teachers at the same centre for practical setup share a total of $140.00.</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Need help?</h2>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Email <strong>exams@mes.gov.bb</strong> or call <strong>+1 (246) 535-0600</strong>.</p>
+<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start claim</button></div></div>`,
+
+'claimant-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-firstname">First name</label>${inp('c-firstname','c-firstname',GovBB.D['c-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-lastname">Last name</label>${inp('c-lastname','c-lastname',GovBB.D['c-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-nrn">National Registration Number (NRN)</label><p class="govbb-hint">Your 11-character NRN, for example 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="c-nrn" data-field="c-nrn" value="${GovBB.D['c-nrn']||''}" placeholder="110915-0048" style="max-width:14rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-phone">Phone number</label>${inp('c-phone','c-phone',GovBB.D['c-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-email">Email address</label>${inp('c-email','c-email',GovBB.D['c-email'],'email')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-school">School or institution</label>${inp('c-school','c-school',GovBB.D['c-school'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-parish">Parish</label>${sel('c-parish','c-parish',GovBB.PARISHES,'Select a parish')}</div>
+${btns()}</form>`,
+
+'duty-category':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Type of duty</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Choose the type of duty you are claiming for. If you have more than one type, submit a separate claim for each.</p>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">What type of duty did you perform?</legend>
+<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('duty-category',['Supervision or invigilation','Practical setup or conduct','Hourly or passage-based duties'])}</div></fieldset>
+${btns()}</form>`,
+
+'supervision-duties':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Supervision and invigilation duties</h1>
+<p class="govbb-hint" style="margin-bottom:var(--spacing-m);">Add each day you worked separately below. Duties of more than 3 hours are paid as a full day.</p>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-exam">Examination</label>${sel('sv-exam','sv-exam',EXAMS)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-centre">Examination centre</label>${inp('sv-centre','sv-centre',GovBB.D['sv-centre'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-duty">Duty type</label>${sel('sv-duty','sv-duty',DUTY_TYPES_B)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-dates">Dates worked</label><p class="govbb-hint">List each date separately, for example: 12 May, 13 May, 15 May 2026.</p><textarea class="govbb-textarea" id="sv-dates" data-field="sv-dates" rows="3" style="width:100%;">${GovBB.D['sv-dates']||''}</textarea></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-duration">Duration for each day</label>${sel('sv-duration','sv-duration',['Full Day','Half Day','Full Day – Bank Holiday','Half Day – Bank Holiday'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="sv-total-days">Total number of days claimed</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="sv-total-days" data-field="sv-total-days" inputmode="numeric" value="${GovBB.D['sv-total-days']||''}" style="max-width:7rem;" /></div></div>
+${btns()}</form>`,
+
+'practical-duties':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Practical setup and conduct duties</h1>
+<p class="govbb-hint" style="margin-bottom:var(--spacing-m);">Rate: $3.12 per candidate. Multiple teachers at the same centre share a total of $140.00.</p>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-exam">Examination</label>${sel('pr-exam','pr-exam',EXAMS)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-centre">Examination centre</label>${inp('pr-centre','pr-centre',GovBB.D['pr-centre'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-subject">Subject(s)</label><p class="govbb-hint">List all subjects, for example: Biology, Chemistry.</p>${inp('pr-subject','pr-subject',GovBB.D['pr-subject'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-candidates">Total number of candidates</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pr-candidates" data-field="pr-candidates" inputmode="numeric" value="${GovBB.D['pr-candidates']||''}" style="max-width:7rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-personnel">Total number of teachers at the centre for this practical</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pr-personnel" data-field="pr-personnel" inputmode="numeric" value="${GovBB.D['pr-personnel']||''}" style="max-width:7rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pr-dates">Dates worked</label><textarea class="govbb-textarea" id="pr-dates" data-field="pr-dates" rows="2" style="width:100%;">${GovBB.D['pr-dates']||''}</textarea></div>
+${btns()}</form>`,
+
+'hourly-duties':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Hourly and passage-based duties</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hd-exam">Examination</label>${sel('hd-exam','hd-exam',EXAMS)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hd-duty">Duty type</label>${sel('hd-duty','hd-duty',DUTY_TYPES_D)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hd-subject">Subject(s)</label>${inp('hd-subject','hd-subject',GovBB.D['hd-subject'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hd-hours">Total hours or passages</label><p class="govbb-hint">Enter the number of hours worked, or number of passages for dictation.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="hd-hours" data-field="hd-hours" inputmode="decimal" value="${GovBB.D['hd-hours']||''}" style="max-width:7rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hd-dates">Dates worked</label><textarea class="govbb-textarea" id="hd-dates" data-field="hd-dates" rows="2" style="width:100%;">${GovBB.D['hd-dates']||''}</textarea></div>
+${btns()}</form>`,
+
+'banking':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your bank account</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Payment will be made directly to your bank account.</p>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bk-bank">Bank or financial institution</label>${sel('bk-bank','bk-bank',BANKS)}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bk-account-type">Account type</label>${sel('bk-account-type','bk-account-type',['Savings','Chequing','Deposit'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bk-account-number">Account number</label><p class="govbb-hint">Enter your account number exactly as it appears on your bank statement.</p>${inp('bk-account-number','bk-account-number',GovBB.D['bk-account-number'])}</div>
+${btns()}</form>`,
+
+'declaration':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this claim you confirm the following.</p>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+${chk('d-accurate','d-accurate','The information I have given is true and accurate.')}
+${chk('d-performed','d-performed','I performed all duties listed in this claim.')}
+${chk('d-bank','d-bank','The bank account details I have given are correct and belong to me.')}
+</div></fieldset>
+${btns()}</form>`,
+
+'check':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Name',GovBB.D['c-firstname']+' '+GovBB.D['c-lastname'],'claimant-details')}
+${GovBB.summaryRow('NRN',GovBB.D['c-nrn'],'claimant-details')}
+${GovBB.summaryRow('School',GovBB.D['c-school'],'claimant-details')}
+${GovBB.summaryRow('Parish',GovBB.D['c-parish'],'claimant-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Duty</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Duty category',GovBB.D['duty-category'],'duty-category')}
+${GovBB.summaryRow('Exam',GovBB.D['sv-exam']||GovBB.D['pr-exam']||GovBB.D['hd-exam'],'duty-category')}
+${GovBB.summaryRow('Duty type',GovBB.D['sv-duty']||GovBB.D['hd-duty'],'duty-category')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Bank account</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Bank',GovBB.D['bk-bank'],'banking')}
+${GovBB.summaryRow('Account type',GovBB.D['bk-account-type'],'banking')}
+${GovBB.summaryRow('Account number',GovBB.D['bk-account-number'],'banking')}</dl>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">By sending this claim you confirm all information is true and accurate.</p></div>
+<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Send claim</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div></div>`,
+
+'confirmation':()=>{GovBB.D['ref-ed']=GovBB.D['ref-ed']||('MoE-ED-'+Math.floor(10000+Math.random()*90000));return `<div>
+<div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Claim sent</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+<p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-ed']}</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+<ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+<li style="margin-bottom:var(--spacing-s);">Your claim will be reviewed and approved by a Supervisor and Examination Officer.</li>
+<li style="margin-bottom:var(--spacing-s);">Once approved, payment will be made directly to your bank account within <strong>15 working days</strong>.</li></ol>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Questions? Email <strong>exams@mes.gov.bb</strong> with your reference number.</p>
+<a href="/" class="govbb-link">Back to home</a></div>`;}
+};
+
+const REQUIRED={
+'claimant-details':[{id:'c-firstname',msg:'Enter your first name'},{id:'c-lastname',msg:'Enter your last name'},{id:'c-nrn',msg:'Enter your NRN'},{id:'c-phone',msg:'Enter your phone number'},{id:'c-email',msg:'Enter your email address'},{id:'c-school',msg:'Enter your school or institution'},{id:'c-parish',msg:'Choose your parish'}],
+'duty-category':[{id:'duty-category-0',msg:'Choose the type of duty you performed'}],
+'supervision-duties':[{id:'sv-exam',msg:'Choose the examination'},{id:'sv-centre',msg:'Enter the examination centre'},{id:'sv-duty',msg:'Choose your duty type'},{id:'sv-dates',msg:'List the dates you worked'},{id:'sv-duration',msg:'Choose the duration'},{id:'sv-total-days',msg:'Enter the total number of days claimed'}],
+'practical-duties':[{id:'pr-exam',msg:'Choose the examination'},{id:'pr-centre',msg:'Enter the examination centre'},{id:'pr-candidates',msg:'Enter the number of candidates'},{id:'pr-personnel',msg:'Enter the number of teachers at the centre'},{id:'pr-dates',msg:'List the dates you worked'}],
+'hourly-duties':[{id:'hd-exam',msg:'Choose the examination'},{id:'hd-duty',msg:'Choose your duty type'},{id:'hd-hours',msg:'Enter the total hours or passages'},{id:'hd-dates',msg:'List the dates you worked'}],
+'banking':[{id:'bk-bank',msg:'Choose your bank or financial institution'},{id:'bk-account-type',msg:'Choose your account type'},{id:'bk-account-number',msg:'Enter your account number'}],
+'declaration':[{id:'d-accurate',msg:'You must confirm the information is accurate'},{id:'d-performed',msg:'You must confirm you performed all duties'},{id:'d-bank',msg:'You must confirm your bank details are correct'}],
+};
+GovBB.init({appElementId:'app',getFlow:getFlow,pages:PAGES,validate:function(page){var rules=REQUIRED[page];if(!rules)return[];return rules.filter(function(r){var el=document.getElementById(r.id);if(!el)return false;if(el.type==='checkbox')return !el.checked;return !el.value.trim();});}});
+</script>
+</body>
+</html>

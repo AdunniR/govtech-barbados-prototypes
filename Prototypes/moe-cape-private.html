@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAPE private candidate registration – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});html+='</ul></div>';document.getElementById('app').insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+const DEPT='Ministry of Education, Technological and Vocational Training';
+function cap(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+DEPT+'</p>';}
+function sel(id,field,opts,ph){ph=ph||'Select one';return '<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+field+'"><option value="">'+ph+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(GovBB.D[field]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>';}
+function chk(id,field,label){return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="'+id+'" name="'+id+'" data-field="'+field+'"'+(GovBB.D[field]?' checked':'')+'/><label class="govbb-checkbox-item__label" for="'+id+'">'+label+'</label></div>';}
+function inp(id,field,val,type){type=type||'text';return '<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+field+'" value="'+(val||'')+'"'+(type==='email'?' autocomplete="email"':'')+'/></div>';}
+function dateFields(prefix,label,hint){hint=hint||'For example, 15 03 2005';return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">'+label+'</legend><p class="govbb-hint">'+hint+'</p><div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-day" data-field="'+prefix+'-day" inputmode="numeric" value="'+(GovBB.D[prefix+'-day']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-month" data-field="'+prefix+'-month" inputmode="numeric" value="'+(GovBB.D[prefix+'-month']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="'+prefix+'-year" data-field="'+prefix+'-year" inputmode="numeric" value="'+(GovBB.D[prefix+'-year']||'')+'" /></div></div></div></fieldset>';}
+function btns(){return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Continue</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div>';}
+function fmtDate(p){var d=GovBB.D[p+'-day'],m=GovBB.D[p+'-month'],y=GovBB.D[p+'-year'];return [d,m,y].filter(Boolean).join(' / ');}
+
+const CAPE_SUBJECTS=['Accounting','Applied Mathematics','Art and Design','Biology','Caribbean Studies','Chemistry','Communication Studies','Computer Science','Economics','Electrical and Electronic Technology','Environmental Science','French','Geography','History','Information Technology','Law','Literatures in English','Logistic and Supply Chain Operations','Management of Business','Mathematics','Physics','Sociology','Spanish','Tourism','Theatre Arts','Food, Nutrition and Health'];
+
+function subjectRow(n){
+  var subj=GovBB.D['s'+n+'-subject']||'';
+  var unit=GovBB.D['s'+n+'-unit']||'';
+  var resit=GovBB.D['s'+n+'-resit']||'No';
+  return `<div style="border:1px solid var(--color-grey-00);border-radius:4px;padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+  <p style="font-weight:var(--font-weight-bold);font-size:var(--font-size-body);margin-bottom:var(--spacing-s);">Subject ${n}${n>1?' (optional)':''}</p>
+  <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);"><label class="govbb-label" for="s${n}-subject">Subject</label>
+  <div class="govbb-select-wrapper"><select class="govbb-select" id="s${n}-subject" data-field="s${n}-subject"><option value="">Choose a subject</option>${CAPE_SUBJECTS.map(function(s){return '<option value="'+s+'"'+(subj===s?' selected':'')+'>'+s+'</option>';}).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+  <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);"><label class="govbb-label" for="s${n}-unit">Unit</label>
+  <div class="govbb-select-wrapper"><select class="govbb-select" id="s${n}-unit" data-field="s${n}-unit"><option value="">Choose a unit</option><option value="Unit 1"${unit==='Unit 1'?' selected':''}>Unit 1</option><option value="Unit 2"${unit==='Unit 2'?' selected':''}>Unit 2</option></select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+  <fieldset class="govbb-fieldset" style="margin-bottom:0;"><legend class="govbb-fieldset__legend" style="font-size:var(--font-size-body);">Is this a resit (reusing a previous SBA)?</legend><div style="display:flex;gap:var(--spacing-m);"><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="s${n}-resit-no" name="s${n}-resit" data-field="s${n}-resit" value="No"${resit==='No'?' checked':''}/><label class="govbb-radio-item__label" for="s${n}-resit-no">No</label></div><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="s${n}-resit-yes" name="s${n}-resit" data-field="s${n}-resit" value="Yes"${resit==='Yes'?' checked':''}/><label class="govbb-radio-item__label" for="s${n}-resit-yes">Yes</label></div></div></fieldset>
+  </div>`;
+}
+
+function selectedSubjects(){var out=[];for(var i=1;i<=6;i++){if(GovBB.D['s'+i+'-subject'])out.push(GovBB.D['s'+i+'-subject']+(GovBB.D['s'+i+'-unit']?' ('+GovBB.D['s'+i+'-unit']+')':''));}return out.join(', ');}
+
+const FLOW=['start','personal-details','contact','subjects','payment','declaration','check','confirmation'];
+const PAGES={
+'start':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Register as a private candidate for CAPE June 2026</h1><hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to register for Caribbean Advanced Proficiency Examination (CAPE) as a private candidate.</p>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+<ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+<li style="margin-bottom:var(--spacing-xs);">National Registration Number (NRN)</li>
+<li style="margin-bottom:var(--spacing-xs);">The subjects and units you want to sit (up to 6)</li>
+<li style="margin-bottom:var(--spacing-xs);">Your payment receipt from the Ministry of Education Accounts Department</li>
+</ul>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body"><strong>Important:</strong> You must pay your examination fees at the Ministry of Education Accounts Department before completing this form. Your receipt name must match your registration name exactly. SBAs are valid for 2 years from first use.</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Need help?</h2>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Email <strong>mist.forms@barbados.gov.bb</strong> or call <strong>+1 (246) 535-1284</strong>.</p>
+<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div></div>`,
+
+'personal-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-firstname">First name</label><p class="govbb-hint">Enter your name exactly as it appears on your ID.</p>${inp('p-firstname','p-firstname',GovBB.D['p-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-middlename">Middle name (optional)</label>${inp('p-middlename','p-middlename',GovBB.D['p-middlename'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-lastname">Last name</label>${inp('p-lastname','p-lastname',GovBB.D['p-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-nrn">National Registration Number (NRN)</label><p class="govbb-hint">Your 11-character NRN, for example 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="p-nrn" data-field="p-nrn" value="${GovBB.D['p-nrn']||''}" placeholder="110915-0048" style="max-width:14rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-gender">Gender</label>${sel('p-gender','p-gender',['Male','Female'])}</div>
+${dateFields('p-dob','Date of birth','For example, 15 03 2003')}
+${btns()}</form>`,
+
+'contact':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Contact details</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-address">Address</label>${inp('c-address','c-address',GovBB.D['c-address'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-parish">Parish</label>${sel('c-parish','c-parish',GovBB.PARISHES,'Select a parish')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-phone">Phone number</label>${inp('c-phone','c-phone',GovBB.D['c-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-email">Email address</label>${inp('c-email','c-email',GovBB.D['c-email'],'email')}</div>
+${btns()}</form>`,
+
+'subjects':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Subjects and units</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Choose up to 6 subjects. For each, select the unit (Unit 1 or Unit 2) you want to sit. You must select at least 1.</p>
+${subjectRow(1)}${subjectRow(2)}${subjectRow(3)}${subjectRow(4)}${subjectRow(5)}${subjectRow(6)}
+${btns()}</form>`,
+
+'payment':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Confirm payment</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must have paid your examination fees before submitting this registration.</p>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pay-receipt">Receipt number</label>${inp('pay-receipt','pay-receipt',GovBB.D['pay-receipt'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pay-date">Date of payment</label><p class="govbb-hint">For example, 10 03 2026.</p>${inp('pay-date','pay-date',GovBB.D['pay-date'])}</div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Payment confirmation</legend>
+${chk('pay-confirmed','pay-confirmed','The name on my receipt matches my registration name exactly.')}</fieldset>
+${btns()}</form>`,
+
+'declaration':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+${chk('d-accurate','d-accurate','All information I have given is true and accurate.')}
+${chk('d-sba','d-sba','I understand that SBAs are valid for 2 years from first use, and I have only selected Resit where this applies.')}
+${chk('d-rules','d-rules','I understand and will follow the CAPE examination regulations.')}
+</div></fieldset>
+${btns()}</form>`,
+
+'check':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Full name',[GovBB.D['p-firstname'],GovBB.D['p-middlename'],GovBB.D['p-lastname']].filter(Boolean).join(' '),'personal-details')}
+${GovBB.summaryRow('NRN',GovBB.D['p-nrn'],'personal-details')}
+${GovBB.summaryRow('Date of birth',fmtDate('p-dob'),'personal-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Subjects</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Subjects selected',selectedSubjects(),'subjects')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Payment</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Receipt number',GovBB.D['pay-receipt'],'payment')}</dl>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">By sending this registration you confirm all information is true and accurate.</p></div>
+<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Send registration</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div></div>`,
+
+'confirmation':()=>{GovBB.D['ref-ca']=GovBB.D['ref-ca']||('MoE-CAPE-'+Math.floor(10000+Math.random()*90000));return `<div>
+<div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Registration sent</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+<p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-ca']}</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+<ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+<li style="margin-bottom:var(--spacing-s);">The Ministry will check your registration and payment within <strong>10 working days</strong>.</li>
+<li style="margin-bottom:var(--spacing-s);">You will receive a confirmation email with your candidate number and timetable.</li>
+<li style="margin-bottom:var(--spacing-s);">Bring your ID and candidate number to each examination.</li></ol>
+<a href="/" class="govbb-link">Back to home</a></div>`;}
+};
+
+const REQUIRED={
+'personal-details':[{id:'p-firstname',msg:'Enter your first name'},{id:'p-lastname',msg:'Enter your last name'},{id:'p-nrn',msg:'Enter your NRN'},{id:'p-gender',msg:'Choose your gender'},{id:'p-dob-day',msg:'Enter the day of your date of birth'},{id:'p-dob-month',msg:'Enter the month of your date of birth'},{id:'p-dob-year',msg:'Enter the year of your date of birth'}],
+'contact':[{id:'c-address',msg:'Enter your address'},{id:'c-parish',msg:'Choose your parish'},{id:'c-phone',msg:'Enter your phone number'},{id:'c-email',msg:'Enter your email address'}],
+'subjects':[{id:'s1-subject',msg:'Choose at least one subject'}],
+'payment':[{id:'pay-receipt',msg:'Enter your receipt number'},{id:'pay-date',msg:'Enter the date of payment'},{id:'pay-confirmed',msg:'You must confirm the receipt name matches your registration name'}],
+'declaration':[{id:'d-accurate',msg:'You must confirm the information is accurate'},{id:'d-sba',msg:'You must confirm you understand the SBA rules'},{id:'d-rules',msg:'You must confirm you will follow CAPE regulations'}],
+};
+GovBB.init({appElementId:'app',flow:FLOW,pages:PAGES,validate:function(page){var rules=REQUIRED[page];if(!rules)return[];return rules.filter(function(r){var el=document.getElementById(r.id);if(!el)return false;if(el.type==='checkbox')return !el.checked;return !el.value.trim();});}});
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application for $100 Textbook Grant – Ministry of Education</title>
+  <link rel="stylesheet" href="../dist/styles.css" />
+  <style>
+    body { background: var(--color-background); }
+    .page-container { max-width: 640px; margin: 0 auto; padding: var(--spacing-l) var(--spacing-m); }
+  </style>
+</head>
+<body>
+<div id="app" class="page-container"></div>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+var PARISHES = [
+  'Christ Church',
+  'Saint Andrew',
+  'Saint George',
+  'Saint James',
+  'Saint John',
+  'Saint Joseph',
+  'Saint Lucy',
+  'Saint Michael',
+  'Saint Peter',
+  'Saint Philip',
+  'Saint Thomas'
+];
+
+var BANKS = [
+  'Barbados Public Workers Co-operative Credit Union',
+  'BNB Finance &amp; Trust',
+  'Butterfield Bank',
+  'CIBC First Caribbean International Bank',
+  'City of Bridgetown Co-operative Credit Union',
+  'Enterprise Growth Fund Ltd',
+  'JMMB Bank Barbados Ltd',
+  'Republic Bank (Barbados) Ltd',
+  'Sagicor Bank Barbados Ltd'
+];
+
+var PUBLIC_SCHOOLS = [
+  'Alexandra School',
+  'Alleyne School',
+  'Blackman &amp; Gollop School',
+  'Christ Church Foundation School',
+  'Coleridge &amp; Parry School',
+  'Combermere School',
+  'Ellerslie Secondary School',
+  'Grantley Adams Memorial School',
+  'Harrison College',
+  'Lester Vaughan School',
+  'Lodge School',
+  'Milton Lynch Secondary School',
+  'Princess Margaret Secondary School',
+  'Queen\'s College',
+  'Reynold Weekes School',
+  'Samuel Jackman Prescod Polytechnic',
+  'Springer Memorial School',
+  'St. George Secondary School',
+  'St. Leonard\'s Boys\' School',
+  'St. Michael School',
+  'The St. Michael Girls\' School',
+  'Wilkie Cumberbatch School',
+  'Wilson Hill School'
+];
+
+var FLOW = [
+  'start',
+  'applicant-details',
+  'address-details',
+  'banking-details',
+  'student-details',
+  'declaration',
+  'check',
+  'confirmation'
+];
+
+function cap(t) {
+  return '<div class="govbb-caption">Ministry of Education, Technological and Vocational Training</div><h1 class="govbb-heading-l">' + t + '</h1>';
+}
+function sel(id, label, opts, hint) {
+  return '<div class="govbb-form-group"><label class="govbb-label" for="' + id + '">' + label + '</label>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<select class="govbb-select" id="' + id + '" name="' + id + '"><option value="">Select</option>' +
+    opts.map(function(o) { return '<option value="' + o + '">' + o + '</option>'; }).join('') +
+    '</select></div>';
+}
+function rad(name, label, opts, hint) {
+  return '<fieldset class="govbb-fieldset"><legend class="govbb-label">' + label + '</legend>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<div class="govbb-radios">' +
+    opts.map(function(o) {
+      var val = typeof o === 'object' ? o.value : o;
+      var lbl = typeof o === 'object' ? o.label : o;
+      return '<div class="govbb-radios__item"><input class="govbb-radios__input" type="radio" id="' + name + '-' + val + '" name="' + name + '" value="' + val + '" /><label class="govbb-label govbb-radios__label" for="' + name + '-' + val + '">' + lbl + '</label></div>';
+    }).join('') +
+    '</div></fieldset>';
+}
+function inp(id, label, type, hint, autocomplete) {
+  type = type || 'text';
+  return '<div class="govbb-form-group"><label class="govbb-label" for="' + id + '">' + label + '</label>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '"' + (autocomplete ? ' autocomplete="' + autocomplete + '"' : '') + ' /></div>';
+}
+function dateFields(prefix, label) {
+  return '<fieldset class="govbb-fieldset"><legend class="govbb-label">' + label + '</legend>' +
+    '<div class="govbb-date-input">' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-day">Day</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-day" name="' + prefix + '-day" inputmode="numeric" maxlength="2" /></div>' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-month">Month</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-month" name="' + prefix + '-month" inputmode="numeric" maxlength="2" /></div>' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-year">Year</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-year" name="' + prefix + '-year" inputmode="numeric" maxlength="4" /></div>' +
+    '</div></fieldset>';
+}
+function btns(next, back) {
+  return '<div class="govbb-button-group">' +
+    '<button class="govbb-button" onclick="GovBB.next()">' + (next || 'Continue') + '</button>' +
+    (back ? '<a href="#" class="govbb-link" onclick="GovBB.back();return false;">Back</a>' : '') +
+    '</div>';
+}
+function fmtDate(prefix) {
+  var d = document.getElementById(prefix + '-day'), m = document.getElementById(prefix + '-month'), y = document.getElementById(prefix + '-year');
+  if (!d || !m || !y) return '—';
+  var dv = d.value, mv = m.value, yv = y.value;
+  if (!dv && !mv && !yv) return '—';
+  return [dv, mv, yv].filter(Boolean).join('/');
+}
+function v(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+function rv(name) { var el = document.querySelector('[name="' + name + '"]:checked'); return el ? el.value : ''; }
+
+var PAGES = {
+  'start': function() {
+    return '<div class="govbb-phase-banner"><p class="govbb-phase-banner__content"><span class="govbb-tag govbb-phase-banner__content__tag">Beta</span><span class="govbb-phase-banner__text">This is a new service.</span></p></div>' +
+      cap('Application for $100 Textbook Grant') +
+      '<p class="govbb-body">The Ministry of Education provides a $100 textbook grant to assist families with the cost of textbooks for students enrolled in public secondary schools in Barbados.</p>' +
+      '<h2 class="govbb-heading-m">Who can apply</h2>' +
+      '<p class="govbb-body">You may apply if your child or dependent is:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>currently enrolled in a public secondary school in Barbados</li>' +
+      '<li>a Barbadian national or lawful resident</li>' +
+      '</ul>' +
+      '<h2 class="govbb-heading-m">Before you start</h2>' +
+      '<p class="govbb-body">You will need:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>your National Registration Number (NRN)</li>' +
+      '<li>your bank account details for payment by direct deposit</li>' +
+      '<li>the name and class of the student</li>' +
+      '<li>confirmation of enrollment from the school principal (may be requested)</li>' +
+      '</ul>' +
+      '<div class="govbb-inset-text"><p class="govbb-body">The grant is paid once per academic year. Only one application per student will be accepted.</p></div>' +
+      '<button class="govbb-button govbb-button--start" onclick="GovBB.next()">Start now</button>';
+  },
+
+  'applicant-details': function() {
+    return cap('Your personal details') +
+      '<p class="govbb-body">Enter the details of the parent or guardian applying for the grant.</p>' +
+      sel('applicant-title', 'Title', ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Rev']) +
+      inp('applicant-firstname', 'First name', 'text', '', 'given-name') +
+      inp('applicant-lastname', 'Last name', 'text', '', 'family-name') +
+      inp('applicant-nrn', 'National Registration Number (NRN)', 'text', 'For example, NRN-123456') +
+      inp('applicant-phone', 'Phone number', 'tel', 'A number we can contact you on', 'tel') +
+      inp('applicant-email', 'Email address', 'email', 'We will send a confirmation to this address', 'email') +
+      btns('Continue', true);
+  },
+
+  'address-details': function() {
+    return cap('Your address') +
+      inp('address-line1', 'Address line 1', 'text', '', 'address-line1') +
+      inp('address-line2', 'Address line 2 (optional)', 'text', '', 'address-line2') +
+      inp('address-city', 'City or town', 'text', '', 'address-level2') +
+      sel('address-parish', 'Parish', PARISHES) +
+      btns('Continue', true);
+  },
+
+  'banking-details': function() {
+    return cap('Bank account details') +
+      '<p class="govbb-body">The grant will be paid by direct bank deposit. Enter your bank account details below.</p>' +
+      '<div class="govbb-inset-text"><p class="govbb-body">Ensure your account details are correct. Incorrect details may cause a delay in payment.</p></div>' +
+      sel('bank-name', 'Bank name', BANKS) +
+      inp('bank-branch', 'Branch name or location', 'text', 'For example, Bridgetown Branch') +
+      inp('bank-account-name', 'Account holder name', 'text', 'As it appears on your bank account') +
+      inp('bank-account-number', 'Account number', 'text') +
+      inp('bank-routing', 'Routing / transit number', 'text', 'The 9-digit number on your cheque or bank statement') +
+      btns('Continue', true);
+  },
+
+  'student-details': function() {
+    return cap('Student details') +
+      '<p class="govbb-body">Enter the details of the student for whom you are applying.</p>' +
+      inp('student-firstname', 'Student\'s first name', 'text') +
+      inp('student-lastname', 'Student\'s last name', 'text') +
+      dateFields('student-dob', 'Student\'s date of birth') +
+      sel('student-school', 'School currently enrolled in', PUBLIC_SCHOOLS) +
+      inp('student-class', 'Current form / class', 'text', 'For example, Form 3A') +
+      inp('academic-year', 'Academic year', 'text', 'For example, 2025/2026') +
+      btns('Continue', true);
+  },
+
+  'declaration': function() {
+    return cap('Declaration') +
+      '<p class="govbb-body">By submitting this application you declare that:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>all information provided is true, complete and accurate</li>' +
+      '<li>the student named is currently enrolled at the school indicated</li>' +
+      '<li>you have not made another application for this grant for the same student in the current academic year</li>' +
+      '<li>you consent to the Ministry of Education verifying enrollment with the school</li>' +
+      '<li>you understand that false declarations may result in repayment of the grant and further action</li>' +
+      '</ul>' +
+      '<div class="govbb-form-group"><div class="govbb-checkboxes"><div class="govbb-checkboxes__item">' +
+      '<input class="govbb-checkboxes__input" type="checkbox" id="declaration-confirm" name="declaration-confirm" />' +
+      '<label class="govbb-label govbb-checkboxes__label" for="declaration-confirm">I confirm the above declaration</label>' +
+      '</div></div></div>' +
+      '<div class="govbb-inset-text"><p class="govbb-body">Your signature (or that of the school principal) may be required to complete processing. You will be contacted if additional documentation is needed.</p></div>' +
+      btns('Continue', true);
+  },
+
+  'check': function() {
+    var rows = '';
+    rows += '<h2 class="govbb-heading-m">Applicant details</h2><dl>';
+    rows += GovBB.summaryRow('Title', v('applicant-title'), 'applicant-details');
+    rows += GovBB.summaryRow('First name', v('applicant-firstname'), 'applicant-details');
+    rows += GovBB.summaryRow('Last name', v('applicant-lastname'), 'applicant-details');
+    rows += GovBB.summaryRow('NRN', v('applicant-nrn'), 'applicant-details');
+    rows += GovBB.summaryRow('Phone', v('applicant-phone'), 'applicant-details');
+    rows += GovBB.summaryRow('Email', v('applicant-email'), 'applicant-details');
+    rows += '</dl>';
+    rows += '<h2 class="govbb-heading-m">Address</h2><dl>';
+    rows += GovBB.summaryRow('Address', [v('address-line1'), v('address-line2'), v('address-city')].filter(Boolean).join(', '), 'address-details');
+    rows += GovBB.summaryRow('Parish', v('address-parish'), 'address-details');
+    rows += '</dl>';
+    rows += '<h2 class="govbb-heading-m">Bank account</h2><dl>';
+    rows += GovBB.summaryRow('Bank', v('bank-name'), 'banking-details');
+    rows += GovBB.summaryRow('Branch', v('bank-branch'), 'banking-details');
+    rows += GovBB.summaryRow('Account holder', v('bank-account-name'), 'banking-details');
+    rows += GovBB.summaryRow('Account number', v('bank-account-number'), 'banking-details');
+    rows += '</dl>';
+    rows += '<h2 class="govbb-heading-m">Student details</h2><dl>';
+    rows += GovBB.summaryRow('First name', v('student-firstname'), 'student-details');
+    rows += GovBB.summaryRow('Last name', v('student-lastname'), 'student-details');
+    rows += GovBB.summaryRow('Date of birth', fmtDate('student-dob'), 'student-details');
+    rows += GovBB.summaryRow('School', v('student-school'), 'student-details');
+    rows += GovBB.summaryRow('Class', v('student-class'), 'student-details');
+    rows += GovBB.summaryRow('Academic year', v('academic-year'), 'student-details');
+    rows += '</dl>';
+    return cap('Check your answers') +
+      '<p class="govbb-body">Review your answers before submitting.</p>' +
+      rows +
+      '<div class="govbb-warning-text"><span class="govbb-warning-text__icon" aria-hidden="true">!</span>' +
+      '<strong class="govbb-warning-text__text">Once submitted, your application will be reviewed. Ensure your bank account details are correct to avoid payment delays.</strong></div>' +
+      btns('Submit application', true);
+  },
+
+  'confirmation': function() {
+    var ref = 'MoE-TG-' + Math.floor(10000 + Math.random() * 90000);
+    return '<div class="govbb-panel govbb-panel--confirmation">' +
+      '<h1 class="govbb-panel__title">Application submitted</h1>' +
+      '<p class="govbb-panel__body">Your reference number<br /><strong>' + ref + '</strong></p>' +
+      '</div>' +
+      '<p class="govbb-body">We have received your $100 Textbook Grant application for <strong>' + v('student-firstname') + ' ' + v('student-lastname') + '</strong>.</p>' +
+      '<h2 class="govbb-heading-m">What happens next</h2>' +
+      '<p class="govbb-body">The Ministry of Education will verify enrollment with <strong>' + (v('student-school') || 'the school') + '</strong> and process your application.</p>' +
+      '<p class="govbb-body">If approved, the grant of <strong>$100.00 BBD</strong> will be deposited to your nominated bank account within 6–8 weeks.</p>' +
+      '<p class="govbb-body">You will receive an email confirmation at <strong>' + (v('applicant-email') || 'the email address you provided') + '</strong>.</p>' +
+      '<p class="govbb-body">If you have questions, contact the Ministry of Education:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>Email: <a class="govbb-link" href="mailto:textbookgrant@mes.gov.bb">textbookgrant@mes.gov.bb</a></li>' +
+      '<li>Phone: (246) 535-0600</li>' +
+      '</ul>' +
+      '<p class="govbb-body"><a class="govbb-link" href="../index.html">Return to Ministry of Education services</a></p>';
+  }
+};
+
+var REQUIRED = {
+  'applicant-details': [
+    { id: 'applicant-firstname', msg: 'Enter your first name' },
+    { id: 'applicant-lastname', msg: 'Enter your last name' },
+    { id: 'applicant-nrn', msg: 'Enter your National Registration Number' },
+    { id: 'applicant-phone', msg: 'Enter your phone number' }
+  ],
+  'address-details': [
+    { id: 'address-line1', msg: 'Enter the first line of your address' },
+    { id: 'address-parish', msg: 'Select your parish' }
+  ],
+  'banking-details': [
+    { id: 'bank-name', msg: 'Select your bank' },
+    { id: 'bank-account-name', msg: 'Enter the account holder name' },
+    { id: 'bank-account-number', msg: 'Enter your account number' }
+  ],
+  'student-details': [
+    { id: 'student-firstname', msg: 'Enter the student\'s first name' },
+    { id: 'student-lastname', msg: 'Enter the student\'s last name' },
+    { id: 'student-school', msg: 'Select the student\'s school' },
+    { id: 'student-class', msg: 'Enter the student\'s current class' },
+    { id: 'academic-year', msg: 'Enter the academic year' }
+  ],
+  'declaration': [
+    { id: 'declaration-confirm', msg: 'You must confirm the declaration to continue' }
+  ]
+};
+
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e) { e.remove(); });
+  document.querySelectorAll('[aria-invalid]').forEach(function(el) { el.removeAttribute('aria-invalid'); el.removeAttribute('aria-describedby'); });
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors || !errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e) { html += '<li><a class="govbb-error-summary__link" href="#' + e.id + '">' + e.msg + '</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e) {
+    var el = document.getElementById(e.id); if (!el) return;
+    var errId = 'err-' + e.id;
+    el.setAttribute('aria-invalid', 'true'); el.setAttribute('aria-describedby', errId);
+    var msg = document.createElement('p'); msg.className = 'govbb-error-message'; msg.id = errId; msg.textContent = e.msg;
+    var group = el.closest('.govbb-form-group') || el.closest('fieldset') || el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\'' + changeTo + '\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> ' + label + '</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">' + label + '</dt><dd style="font-size:var(--font-size-body);">' + (value || '—') + '</dd><div>' + link + '</div></div>';
+};
+
+function nav(page) { GovBB.nav(page); }
+
+GovBB.init({
+  appElementId: 'app',
+  flow: FLOW,
+  pages: PAGES,
+  validate: function(page) {
+    var rules = REQUIRED[page];
+    if (!rules) return [];
+    return rules.filter(function(r) {
+      var el = document.getElementById(r.id);
+      if (!el) return false;
+      if (el.type === 'checkbox') return !el.checked;
+      return !el.value.trim();
+    });
+  }
+});
+</script>
+</body>
+</html>

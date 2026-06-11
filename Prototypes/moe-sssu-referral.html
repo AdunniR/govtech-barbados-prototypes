@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referral to Student Support Services – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});html+='</ul></div>';document.getElementById('app').insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+const DEPT='Ministry of Education, Technological and Vocational Training';
+function cap(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+DEPT+' — Student Support Service Unit (SSSU)</p>';}
+function sel(id,field,opts,ph){ph=ph||'Select one';return '<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+field+'"><option value="">'+ph+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(GovBB.D[field]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>';}
+function rad(name,opts){return opts.map(function(o,i){return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+name+'-'+i+'" name="'+name+'" data-field="'+name+'" value="'+o+'"'+(GovBB.D[name]===o?' checked':'')+'/><label class="govbb-radio-item__label" for="'+name+'-'+i+'">'+o+'</label></div>';}).join('');}
+function chk(id,field,label){return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="'+id+'" name="'+id+'" data-field="'+field+'"'+(GovBB.D[field]?' checked':'')+'/><label class="govbb-checkbox-item__label" for="'+id+'">'+label+'</label></div>';}
+function inp(id,field,val,type){type=type||'text';return '<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+field+'" value="'+(val||'')+'"'+(type==='email'?' autocomplete="email"':'')+'/></div>';}
+function dateFields(prefix,label,hint){hint=hint||'For example, 15 03 2015';return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">'+label+'</legend><p class="govbb-hint">'+hint+'</p><div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-day" data-field="'+prefix+'-day" inputmode="numeric" value="'+(GovBB.D[prefix+'-day']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-month" data-field="'+prefix+'-month" inputmode="numeric" value="'+(GovBB.D[prefix+'-month']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="'+prefix+'-year" data-field="'+prefix+'-year" inputmode="numeric" value="'+(GovBB.D[prefix+'-year']||'')+'" /></div></div></div></fieldset>';}
+function btns(){return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Continue</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div>';}
+function fmtDate(p){var d=GovBB.D[p+'-day'],m=GovBB.D[p+'-month'],y=GovBB.D[p+'-year'];return [d,m,y].filter(Boolean).join(' / ');}
+
+const CONCERNS=[['cn-learning','Learning difficulties (reading, writing, numeracy)'],['cn-behaviour','Behaviour or conduct concerns'],['cn-attendance','Poor attendance or school refusal'],['cn-emotional','Emotional or mental health concerns'],['cn-speech','Speech, language, or communication difficulties'],['cn-physical','Physical or mobility difficulties'],['cn-hearing','Hearing impairment'],['cn-vision','Visual impairment'],['cn-autism','Autism spectrum'],['cn-gifted','Gifted or highly able — needs additional support'],['cn-social','Social difficulties or peer relationship issues'],['cn-abuse','Safeguarding or welfare concern']];
+function selectedConcerns(){return CONCERNS.filter(function(c){return GovBB.D[c[0]];}).map(function(c){return c[1];}).join(', ');}
+
+const FLOW=['start','referrer-details','student-details','parent-contact','areas-of-concern','background','declaration','check','confirmation'];
+const PAGES={
+'start':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Refer a student to the Student Support Service Unit</h1><hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to refer a student for a special needs assessment by the Student Support Service Unit (SSSU). This form is for teachers, counsellors, and school principals.</p>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+<ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+<li style="margin-bottom:var(--spacing-xs);">Your details and role at the school</li>
+<li style="margin-bottom:var(--spacing-xs);">The student's name, date of birth, and class</li>
+<li style="margin-bottom:var(--spacing-xs);">Parent or guardian contact information</li>
+<li style="margin-bottom:var(--spacing-xs);">Details of the concerns that led to the referral</li>
+</ul>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body"><strong>Important:</strong> You must have the parent's or guardian's consent before referring a student. The SSSU will contact the family once the referral is received.</p></div>
+<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start referral</button></div></div>`,
+
+'referrer-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (the person making this referral)</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="r-name">Full name</label>${inp('r-name','r-name',GovBB.D['r-name'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="r-role">Role at school</label>${sel('r-role','r-role',['Class teacher','Subject teacher','School counsellor','Vice principal','Principal','Other'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="r-school">School</label>${inp('r-school','r-school',GovBB.D['r-school'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="r-phone">Phone number</label>${inp('r-phone','r-phone',GovBB.D['r-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="r-email">School email address</label>${inp('r-email','r-email',GovBB.D['r-email'],'email')}</div>
+${btns()}</form>`,
+
+'student-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the student</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-firstname">Student's first name</label>${inp('s-firstname','s-firstname',GovBB.D['s-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-lastname">Student's last name</label>${inp('s-lastname','s-lastname',GovBB.D['s-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-gender">Gender</label>${sel('s-gender','s-gender',['Male','Female'])}</div>
+${dateFields('s-dob','Date of birth','For example, 15 03 2015')}
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-class">Class or form</label><p class="govbb-hint">For example: Class 3, Form 2, Lower 6.</p>${inp('s-class','s-class',GovBB.D['s-class'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-parish">Parish of residence</label>${sel('s-parish','s-parish',GovBB.PARISHES,'Select a parish')}</div>
+${btns()}</form>`,
+
+'parent-contact':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Parent or guardian contact</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pg-name">Parent or guardian name</label>${inp('pg-name','pg-name',GovBB.D['pg-name'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pg-relationship">Relationship to student</label>${sel('pg-relationship','pg-relationship',['Mother','Father','Grandmother','Grandfather','Aunt','Uncle','Legal guardian','Other'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pg-phone">Phone number</label>${inp('pg-phone','pg-phone',GovBB.D['pg-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pg-email">Email address (optional)</label>${inp('pg-email','pg-email',GovBB.D['pg-email'],'email')}</div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Has the parent or guardian given consent for this referral?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('pg-consent',['Yes, in writing','Yes, verbally','Not yet — I will get consent before the SSSU contacts them'])}</div></fieldset>
+${btns()}</form>`,
+
+'areas-of-concern':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Areas of concern</h1>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">What are your concerns about this student?</legend><p class="govbb-hint">Choose all that apply.</p>
+<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+${CONCERNS.map(function(c){return chk(c[0],c[0],c[1]);}).join('')}
+</div></fieldset>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="ac-other">Other concerns (optional)</label>${inp('ac-other','ac-other',GovBB.D['ac-other'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="ac-observed">Describe what you have observed</label><p class="govbb-hint">Give specific examples of behaviours, incidents, or difficulties you have noticed.</p><textarea class="govbb-textarea" id="ac-observed" data-field="ac-observed" rows="5" style="width:100%;">${GovBB.D['ac-observed']||''}</textarea></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="ac-duration">How long have these concerns been present?</label>${sel('ac-duration','ac-duration',['Less than 1 month','1–3 months','3–6 months','More than 6 months','Over a year'])}</div>
+${btns()}</form>`,
+
+'background':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Background and previous support</h1>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Has the student had any previous assessment or support?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('bg-prev-support',['Yes','No','Not known'])}</div></fieldset>
+<div data-show-when-name="bg-prev-support" data-show-when-value="Yes" style="display:${GovBB.D['bg-prev-support']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bg-prev-detail">Describe the previous support or assessment</label><textarea class="govbb-textarea" id="bg-prev-detail" data-field="bg-prev-detail" rows="3" style="width:100%;">${GovBB.D['bg-prev-detail']||''}</textarea></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bg-interventions">What has the school already tried?</label><p class="govbb-hint">Describe any interventions, accommodations, or strategies used in the classroom.</p><textarea class="govbb-textarea" id="bg-interventions" data-field="bg-interventions" rows="4" style="width:100%;">${GovBB.D['bg-interventions']||''}</textarea></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bg-medical">Any known medical or family factors (optional)</label><p class="govbb-hint">Only include information that is relevant to the referral and that you have permission to share.</p><textarea class="govbb-textarea" id="bg-medical" data-field="bg-medical" rows="3" style="width:100%;">${GovBB.D['bg-medical']||''}</textarea></div>
+${btns()}</form>`,
+
+'declaration':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this referral you confirm the following.</p>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+${chk('d-accurate','d-accurate','The information I have given is accurate to the best of my knowledge.')}
+${chk('d-consent','d-consent','I have obtained or will obtain consent from the parent or guardian before the SSSU contacts the family.')}
+${chk('d-principal','d-principal','My school principal is aware of this referral.')}
+</div></fieldset>
+${btns()}</form>`,
+
+'check':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Name',GovBB.D['r-name'],'referrer-details')}
+${GovBB.summaryRow('Role',GovBB.D['r-role'],'referrer-details')}
+${GovBB.summaryRow('School',GovBB.D['r-school'],'referrer-details')}
+${GovBB.summaryRow('Email',GovBB.D['r-email'],'referrer-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Student</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Name',GovBB.D['s-firstname']+' '+GovBB.D['s-lastname'],'student-details')}
+${GovBB.summaryRow('Date of birth',fmtDate('s-dob'),'student-details')}
+${GovBB.summaryRow('Class',GovBB.D['s-class'],'student-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent / guardian</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Name',GovBB.D['pg-name'],'parent-contact')}
+${GovBB.summaryRow('Phone',GovBB.D['pg-phone'],'parent-contact')}
+${GovBB.summaryRow('Consent',GovBB.D['pg-consent'],'parent-contact')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Concerns</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Areas of concern',selectedConcerns(),'areas-of-concern')}
+${GovBB.summaryRow('Duration',GovBB.D['ac-duration'],'areas-of-concern')}</dl>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">By sending this referral you confirm all information is accurate and that parental consent has been or will be obtained.</p></div>
+<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Send referral</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div></div>`,
+
+'confirmation':()=>{GovBB.D['ref-sr']=GovBB.D['ref-sr']||('MoE-SR-'+Math.floor(10000+Math.random()*90000));return `<div>
+<div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Referral sent</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+<p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-sr']}</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+<ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+<li style="margin-bottom:var(--spacing-s);">The Student Support Service Unit will review the referral within <strong>5 working days</strong>.</li>
+<li style="margin-bottom:var(--spacing-s);">The SSSU will contact the parent or guardian to arrange an assessment.</li>
+<li style="margin-bottom:var(--spacing-s);">You will receive feedback from the SSSU once the assessment is complete.</li></ol>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Questions? Contact the SSSU directly and quote your reference number.</p>
+<a href="/" class="govbb-link">Back to home</a></div>`;}
+};
+
+const REQUIRED={
+'referrer-details':[{id:'r-name',msg:'Enter your name'},{id:'r-role',msg:'Choose your role'},{id:'r-school',msg:'Enter your school name'},{id:'r-phone',msg:'Enter your phone number'},{id:'r-email',msg:'Enter your email address'}],
+'student-details':[{id:'s-firstname',msg:'Enter the student\'s first name'},{id:'s-lastname',msg:'Enter the student\'s last name'},{id:'s-gender',msg:'Choose the student\'s gender'},{id:'s-dob-day',msg:'Enter the day of the student\'s date of birth'},{id:'s-dob-month',msg:'Enter the month of the student\'s date of birth'},{id:'s-dob-year',msg:'Enter the year of the student\'s date of birth'},{id:'s-class',msg:'Enter the student\'s class or form'}],
+'parent-contact':[{id:'pg-name',msg:'Enter the parent or guardian\'s name'},{id:'pg-relationship',msg:'Choose the relationship to the student'},{id:'pg-phone',msg:'Enter the parent or guardian\'s phone number'},{id:'pg-consent-0',msg:'Tell us whether consent has been given'}],
+'areas-of-concern':[{id:'ac-observed',msg:'Describe what you have observed'},{id:'ac-duration',msg:'Choose how long the concerns have been present'}],
+'background':[{id:'bg-interventions',msg:'Tell us what the school has already tried'}],
+'declaration':[{id:'d-accurate',msg:'You must confirm the information is accurate'},{id:'d-consent',msg:'You must confirm parental consent will be obtained'},{id:'d-principal',msg:'You must confirm the principal is aware'}],
+};
+GovBB.init({appElementId:'app',flow:FLOW,pages:PAGES,validate:function(page){var rules=REQUIRED[page];if(!rules)return[];return rules.filter(function(r){var el=document.getElementById(r.id);if(!el)return false;if(el.type==='checkbox')return !el.checked;return !el.value.trim();});}});
+</script>
+</body>
+</html>

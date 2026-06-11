@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSSEE Choice of School Application – Ministry of Education</title>
+  <link rel="stylesheet" href="../dist/styles.css" />
+  <style>
+    body { background: var(--color-background); }
+    .page-container { max-width: 640px; margin: 0 auto; padding: var(--spacing-l) var(--spacing-m); }
+    .school-row { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-s); align-items: center; margin-bottom: var(--spacing-s); padding: var(--spacing-s); border: 1px solid var(--color-grey-00); border-radius: 4px; }
+    .school-rank { font-weight: var(--font-weight-bold); font-size: var(--font-size-body); color: var(--color-primary); min-width: 24px; }
+  </style>
+</head>
+<body>
+<div id="app" class="page-container"></div>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+var SCHOOLS = [
+  'Alexandra School',
+  'Alleyne School',
+  'Barbados Community College (Sixth Form)',
+  'Blackman & Gollop School',
+  'Christ Church Foundation School',
+  'Coleridge & Parry School',
+  'Combermere School',
+  'Ellerslie Secondary School',
+  'Grantley Adams Memorial School',
+  'Harrison College',
+  'Lester Vaughan School',
+  'Lodge School',
+  'Milton Lynch Secondary School',
+  'Princess Margaret Secondary School',
+  'Queen\'s College',
+  'Reynold Weekes School',
+  'Samuel Jackman Prescod Polytechnic',
+  'Springer Memorial School',
+  'St. George Secondary School',
+  'St. Leonard\'s Boys\' School',
+  'St. Michael School',
+  'The St. Michael Girls\' School',
+  'Wilkie Cumberbatch School',
+  'Wilson Hill School'
+];
+
+var PARISHES = [
+  'Christ Church',
+  'Saint Andrew',
+  'Saint George',
+  'Saint James',
+  'Saint John',
+  'Saint Joseph',
+  'Saint Lucy',
+  'Saint Michael',
+  'Saint Peter',
+  'Saint Philip',
+  'Saint Thomas'
+];
+
+var FLOW = [
+  'start',
+  'parent-details',
+  'child-details',
+  'current-school',
+  'school-choices',
+  'declaration',
+  'check',
+  'confirmation'
+];
+
+function cap(t) { return '<div class="govbb-caption">Ministry of Education, Technological and Vocational Training</div><h1 class="govbb-heading-l">' + t + '</h1>'; }
+function sel(id, label, opts, hint) {
+  return '<div class="govbb-form-group"><label class="govbb-label" for="' + id + '">' + label + '</label>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<select class="govbb-select" id="' + id + '" name="' + id + '"><option value="">Select</option>' +
+    opts.map(function(o) { return '<option value="' + o + '">' + o + '</option>'; }).join('') +
+    '</select></div>';
+}
+function rad(name, label, opts, hint) {
+  return '<fieldset class="govbb-fieldset"><legend class="govbb-label">' + label + '</legend>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<div class="govbb-radios">' +
+    opts.map(function(o) {
+      var v = typeof o === 'object' ? o.value : o;
+      var l = typeof o === 'object' ? o.label : o;
+      return '<div class="govbb-radios__item"><input class="govbb-radios__input" type="radio" id="' + name + '-' + v + '" name="' + name + '" value="' + v + '" /><label class="govbb-label govbb-radios__label" for="' + name + '-' + v + '">' + l + '</label></div>';
+    }).join('') +
+    '</div></fieldset>';
+}
+function inp(id, label, type, hint, autocomplete) {
+  type = type || 'text';
+  return '<div class="govbb-form-group"><label class="govbb-label" for="' + id + '">' + label + '</label>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '"' + (autocomplete ? ' autocomplete="' + autocomplete + '"' : '') + ' /></div>';
+}
+function dateFields(prefix, label) {
+  return '<fieldset class="govbb-fieldset"><legend class="govbb-label">' + label + '</legend>' +
+    '<div class="govbb-date-input">' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-day">Day</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-day" name="' + prefix + '-day" inputmode="numeric" maxlength="2" /></div>' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-month">Month</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-month" name="' + prefix + '-month" inputmode="numeric" maxlength="2" /></div>' +
+    '<div class="govbb-date-input__item"><label class="govbb-label" for="' + prefix + '-year">Year</label><input class="govbb-input govbb-date-input__input" type="text" id="' + prefix + '-year" name="' + prefix + '-year" inputmode="numeric" maxlength="4" /></div>' +
+    '</div></fieldset>';
+}
+function btns(next, back) {
+  return '<div class="govbb-button-group">' +
+    '<button class="govbb-button" onclick="GovBB.next()">' + (next || 'Continue') + '</button>' +
+    (back ? '<a href="#" class="govbb-link" onclick="GovBB.back();return false;">Back</a>' : '') +
+    '</div>';
+}
+function fmtDate(prefix) {
+  var d = document.getElementById(prefix + '-day'), m = document.getElementById(prefix + '-month'), y = document.getElementById(prefix + '-year');
+  if (!d || !m || !y) return '—';
+  var dv = d.value, mv = m.value, yv = y.value;
+  if (!dv && !mv && !yv) return '—';
+  return [dv, mv, yv].filter(Boolean).join('/');
+}
+function v(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+function rv(name) { var el = document.querySelector('[name="' + name + '"]:checked'); return el ? el.value : ''; }
+
+function schoolChoiceRow(n, ordinal, hint) {
+  var schoolOpts = SCHOOLS.filter(function(s) { return true; });
+  return '<div class="school-row"><span class="school-rank">' + n + ordinal + '</span>' +
+    '<div class="govbb-form-group" style="margin:0">' +
+    '<label class="govbb-label" for="school-choice-' + n + '">' + n + ordinal + ' choice</label>' +
+    (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
+    '<select class="govbb-select" id="school-choice-' + n + '" name="school-choice-' + n + '"><option value="">Select a school</option>' +
+    schoolOpts.map(function(s) { return '<option value="' + s + '">' + s + '</option>'; }).join('') +
+    '</select></div></div>';
+}
+
+var PAGES = {
+  'start': function() {
+    return '<div class="govbb-phase-banner"><p class="govbb-phase-banner__content"><span class="govbb-tag govbb-phase-banner__content__tag">Beta</span><span class="govbb-phase-banner__text">This is a new service.</span></p></div>' +
+      cap('BSSEE Choice of School Application') +
+      '<p class="govbb-body">Use this form to submit your child\'s school preferences for placement following the Barbados Secondary School Entrance Examination (BSSEE).</p>' +
+      '<p class="govbb-body">You must submit this form within the deadline published by the Ministry of Education. Late submissions may not be considered.</p>' +
+      '<h2 class="govbb-heading-m">Before you start</h2>' +
+      '<p class="govbb-body">You will need:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>your child\'s full name and date of birth</li>' +
+      '<li>your child\'s current school and class</li>' +
+      '<li>names of up to 3 school preferences in order of priority</li>' +
+      '<li>your National Registration Number (NRN)</li>' +
+      '</ul>' +
+      '<div class="govbb-inset-text"><p class="govbb-body">School placement is not guaranteed. The Ministry will allocate places based on BSSEE results, school capacity, and sibling priority rules.</p></div>' +
+      '<button class="govbb-button govbb-button--start" onclick="GovBB.next()">Start now</button>';
+  },
+  'parent-details': function() {
+    return cap('Your details') +
+      '<p class="govbb-body">Enter the details of the parent or guardian completing this application.</p>' +
+      sel('parent-title', 'Title', ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Rev']) +
+      inp('parent-firstname', 'First name', 'text', '', 'given-name') +
+      inp('parent-lastname', 'Last name', 'text', '', 'family-name') +
+      inp('parent-nrn', 'National Registration Number (NRN)', 'text', 'For example, NRN-123456') +
+      inp('parent-phone', 'Phone number', 'tel', '', 'tel') +
+      inp('parent-email', 'Email address', 'email', '', 'email') +
+      sel('parent-parish', 'Parish of residence', PARISHES) +
+      btns('Continue', true);
+  },
+  'child-details': function() {
+    return cap('Your child\'s details') +
+      inp('child-firstname', 'Child\'s first name', 'text', '', 'off') +
+      inp('child-lastname', 'Child\'s last name', 'text', '', 'off') +
+      inp('child-middlename', 'Middle name (if any)', 'text', 'Leave blank if not applicable') +
+      dateFields('child-dob', 'Date of birth') +
+      rad('child-gender', 'Gender', ['Male', 'Female']) +
+      inp('child-nrn', 'Child\'s National Registration Number', 'text', 'If the child has an NRN. Leave blank if not applicable.') +
+      btns('Continue', true);
+  },
+  'current-school': function() {
+    return cap('Current school information') +
+      inp('current-school-name', 'Current school name', 'text') +
+      inp('current-school-class', 'Current class', 'text', 'For example, Standard 4B') +
+      rad('has-sibling', 'Does your child have a sibling currently enrolled at any of your preferred schools?',
+        [{value:'yes', label:'Yes'}, {value:'no', label:'No'}]) +
+      '<div id="sibling-reveal" style="display:none">' +
+      inp('sibling-name', 'Sibling\'s full name', 'text') +
+      inp('sibling-school', 'School where sibling is enrolled', 'text') +
+      '</div>' +
+      '<script>document.querySelectorAll("[name=has-sibling]").forEach(function(r){r.addEventListener("change",function(){var show=document.querySelector("[name=has-sibling]:checked")&&document.querySelector("[name=has-sibling]:checked").value==="yes";document.getElementById("sibling-reveal").style.display=show?"block":"none";});});<\/script>' +
+      btns('Continue', true);
+  },
+  'school-choices': function() {
+    return cap('School preferences') +
+      '<p class="govbb-body">Enter up to 3 school preferences in order of priority. Your 1st choice is your most preferred school.</p>' +
+      '<div class="govbb-inset-text"><p class="govbb-body">You must enter at least one preference. Choices 2 and 3 are optional but recommended.</p></div>' +
+      schoolChoiceRow(1, 'st', '') +
+      schoolChoiceRow(2, 'nd', 'Optional') +
+      schoolChoiceRow(3, 'rd', 'Optional') +
+      btns('Continue', true);
+  },
+  'declaration': function() {
+    return cap('Declaration') +
+      '<p class="govbb-body">By submitting this application you confirm that:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>the information provided is accurate and complete to the best of your knowledge</li>' +
+      '<li>you are the parent or legal guardian of the child named in this application</li>' +
+      '<li>you understand that false information may result in the application being rejected</li>' +
+      '<li>you consent to the Ministry of Education processing this information for placement purposes</li>' +
+      '</ul>' +
+      '<div class="govbb-form-group"><div class="govbb-checkboxes"><div class="govbb-checkboxes__item">' +
+      '<input class="govbb-checkboxes__input" type="checkbox" id="declaration-confirm" name="declaration-confirm" />' +
+      '<label class="govbb-label govbb-checkboxes__label" for="declaration-confirm">I confirm the above declaration</label>' +
+      '</div></div></div>' +
+      btns('Continue', true);
+  },
+  'check': function() {
+    var rows = '';
+    rows += '<h2 class="govbb-heading-m">Parent / Guardian details</h2><dl>';
+    rows += GovBB.summaryRow('Title', v('parent-title'), 'parent-details');
+    rows += GovBB.summaryRow('First name', v('parent-firstname'), 'parent-details');
+    rows += GovBB.summaryRow('Last name', v('parent-lastname'), 'parent-details');
+    rows += GovBB.summaryRow('NRN', v('parent-nrn'), 'parent-details');
+    rows += GovBB.summaryRow('Phone', v('parent-phone'), 'parent-details');
+    rows += GovBB.summaryRow('Email', v('parent-email'), 'parent-details');
+    rows += GovBB.summaryRow('Parish', v('parent-parish'), 'parent-details');
+    rows += '</dl>';
+    rows += '<h2 class="govbb-heading-m">Child\'s details</h2><dl>';
+    rows += GovBB.summaryRow('First name', v('child-firstname'), 'child-details');
+    rows += GovBB.summaryRow('Last name', v('child-lastname'), 'child-details');
+    rows += GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details');
+    rows += GovBB.summaryRow('Gender', rv('child-gender'), 'child-details');
+    rows += GovBB.summaryRow('Current school', v('current-school-name'), 'current-school');
+    rows += GovBB.summaryRow('Current class', v('current-school-class'), 'current-school');
+    rows += '</dl>';
+    rows += '<h2 class="govbb-heading-m">School preferences</h2><dl>';
+    rows += GovBB.summaryRow('1st choice', v('school-choice-1'), 'school-choices');
+    rows += GovBB.summaryRow('2nd choice', v('school-choice-2') || 'Not entered', 'school-choices');
+    rows += GovBB.summaryRow('3rd choice', v('school-choice-3') || 'Not entered', 'school-choices');
+    rows += '</dl>';
+    return cap('Check your answers') +
+      '<p class="govbb-body">Review your answers before submitting.</p>' +
+      rows +
+      '<div class="govbb-warning-text"><span class="govbb-warning-text__icon" aria-hidden="true">!</span>' +
+      '<strong class="govbb-warning-text__text">Once submitted, your application will be processed by the Ministry of Education. Ensure all details are correct.</strong></div>' +
+      btns('Submit application', true);
+  },
+  'confirmation': function() {
+    var ref = 'MoE-BSSEE-' + Math.floor(10000 + Math.random() * 90000);
+    return '<div class="govbb-panel govbb-panel--confirmation">' +
+      '<h1 class="govbb-panel__title">Application submitted</h1>' +
+      '<p class="govbb-panel__body">Your reference number<br /><strong>' + ref + '</strong></p>' +
+      '</div>' +
+      '<p class="govbb-body">We have received your BSSEE Choice of School application for <strong>' + v('child-firstname') + ' ' + v('child-lastname') + '</strong>.</p>' +
+      '<h2 class="govbb-heading-m">What happens next</h2>' +
+      '<p class="govbb-body">The Ministry of Education will review all applications and allocate school places based on BSSEE results and available capacity.</p>' +
+      '<p class="govbb-body">You will be notified of your child\'s placement by post and email. Notifications are typically sent 6–8 weeks after the BSSEE results are published.</p>' +
+      '<p class="govbb-body">If you have questions, contact the Ministry of Education:</p>' +
+      '<ul class="govbb-list govbb-list--bullet">' +
+      '<li>Email: <a class="govbb-link" href="mailto:bsseeapplications@mes.gov.bb">bsseeapplications@mes.gov.bb</a></li>' +
+      '<li>Phone: (246) 535-0600</li>' +
+      '</ul>' +
+      '<p class="govbb-body"><a class="govbb-link" href="../index.html">Return to Ministry of Education services</a></p>';
+  }
+};
+
+var REQUIRED = {
+  'parent-details': [
+    { id: 'parent-firstname', msg: 'Enter your first name' },
+    { id: 'parent-lastname', msg: 'Enter your last name' },
+    { id: 'parent-nrn', msg: 'Enter your National Registration Number' },
+    { id: 'parent-phone', msg: 'Enter your phone number' }
+  ],
+  'child-details': [
+    { id: 'child-firstname', msg: 'Enter your child\'s first name' },
+    { id: 'child-lastname', msg: 'Enter your child\'s last name' },
+    { id: 'child-dob-day', msg: 'Enter your child\'s date of birth' }
+  ],
+  'current-school': [
+    { id: 'current-school-name', msg: 'Enter the name of the current school' },
+    { id: 'current-school-class', msg: 'Enter the current class' }
+  ],
+  'school-choices': [
+    { id: 'school-choice-1', msg: 'Select at least one school preference' }
+  ],
+  'declaration': [
+    { id: 'declaration-confirm', msg: 'You must confirm the declaration to continue' }
+  ]
+};
+
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e) { e.remove(); });
+  document.querySelectorAll('[aria-invalid]').forEach(function(el) { el.removeAttribute('aria-invalid'); el.removeAttribute('aria-describedby'); });
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors || !errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e) { html += '<li><a class="govbb-error-summary__link" href="#' + e.id + '">' + e.msg + '</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e) {
+    var el = document.getElementById(e.id); if (!el) return;
+    var errId = 'err-' + e.id;
+    el.setAttribute('aria-invalid', 'true'); el.setAttribute('aria-describedby', errId);
+    var msg = document.createElement('p'); msg.className = 'govbb-error-message'; msg.id = errId; msg.textContent = e.msg;
+    var group = el.closest('.govbb-form-group') || el.closest('fieldset') || el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\'' + changeTo + '\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> ' + label + '</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">' + label + '</dt><dd style="font-size:var(--font-size-body);">' + (value || '—') + '</dd><div>' + link + '</div></div>';
+};
+
+function nav(page) { GovBB.nav(page); }
+
+GovBB.init({
+  appElementId: 'app',
+  flow: FLOW,
+  pages: PAGES,
+  validate: function(page) {
+    var rules = REQUIRED[page];
+    if (!rules) return [];
+    return rules.filter(function(r) {
+      var el = document.getElementById(r.id);
+      if (!el) return false;
+      if (el.type === 'checkbox') return !el.checked;
+      return !el.value.trim();
+    });
+  }
+});
+</script>
+</body>
+</html>

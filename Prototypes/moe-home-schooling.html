@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for home schooling – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});html+='</ul></div>';document.getElementById('app').insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+const DEPT='Ministry of Education, Technological and Vocational Training';
+function cap(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+DEPT+'</p>';}
+function sel(id,field,opts,ph){ph=ph||'Select one';return '<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+field+'"><option value="">'+ph+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(GovBB.D[field]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>';}
+function rad(name,opts){return opts.map(function(o,i){return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+name+'-'+i+'" name="'+name+'" data-field="'+name+'" value="'+o+'"'+(GovBB.D[name]===o?' checked':'')+'/><label class="govbb-radio-item__label" for="'+name+'-'+i+'">'+o+'</label></div>';}).join('');}
+function chk(id,field,label){return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="'+id+'" name="'+id+'" data-field="'+field+'"'+(GovBB.D[field]?' checked':'')+'/><label class="govbb-checkbox-item__label" for="'+id+'">'+label+'</label></div>';}
+function inp(id,field,val,type){type=type||'text';return '<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+field+'" value="'+(val||'')+'"'+(type==='email'?' autocomplete="email"':'')+'/></div>';}
+function fmtDate(p){var d=GovBB.D[p+'-day'],m=GovBB.D[p+'-month'],y=GovBB.D[p+'-year'];return [d,m,y].filter(Boolean).join(' / ');}
+function dateFields(prefix,label,hint){hint=hint||'For example, 15 03 2015';return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">'+label+'</legend><p class="govbb-hint">'+hint+'</p><div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-day" data-field="'+prefix+'-day" inputmode="numeric" value="'+(GovBB.D[prefix+'-day']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-month" data-field="'+prefix+'-month" inputmode="numeric" value="'+(GovBB.D[prefix+'-month']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="'+prefix+'-year" data-field="'+prefix+'-year" inputmode="numeric" value="'+(GovBB.D[prefix+'-year']||'')+'" /></div></div></div></fieldset>';}
+function btns(){return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Continue</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div>';}
+
+const FLOW=['start','parent-details','child-details','schooling-reason','curriculum-plan','parent-qualifications','declaration','check','confirmation'];
+
+const PAGES={
+'start':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Apply for home schooling</h1><hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to apply for permission to teach your child at home instead of sending them to a registered school in Barbados.</p>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>15 minutes</strong>.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+<ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+<li style="margin-bottom:var(--spacing-xs);">Your National Registration Number (NRN)</li>
+<li style="margin-bottom:var(--spacing-xs);">Your child's details (name, date of birth, current or last school)</li>
+<li style="margin-bottom:var(--spacing-xs);">Your highest qualification</li>
+<li style="margin-bottom:var(--spacing-xs);">Your plan for the subjects and hours you will teach each week</li>
+</ul>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Before you start</h2>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Home schooling must be approved by the Ministry of Education. Your child will be expected to sit national assessments at the same points as school-enrolled children. The Ministry may visit your home to check that a suitable learning environment exists.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Need help?</h2>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Call <strong>+1 (246) 535-0600</strong> or email <strong>info@mes.gov.bb</strong>.</p>
+<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div></div>`,
+
+'parent-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (parent or guardian)</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-firstname">First name</label>${inp('p-firstname','p-firstname',GovBB.D['p-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-lastname">Last name</label>${inp('p-lastname','p-lastname',GovBB.D['p-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-nrn">National Registration Number (NRN)</label><p class="govbb-hint">Your 11-character NRN, for example 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="p-nrn" data-field="p-nrn" value="${GovBB.D['p-nrn']||''}" placeholder="110915-0048" style="max-width:14rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-relationship">Your relationship to the child</label>${sel('p-relationship','p-relationship',['Mother','Father','Legal guardian','Other carer'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-address">Address</label>${inp('p-address','p-address',GovBB.D['p-address'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-parish">Parish</label>${sel('p-parish','p-parish',GovBB.PARISHES,'Select a parish')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-phone">Phone number</label>${inp('p-phone','p-phone',GovBB.D['p-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="p-email">Email address</label>${inp('p-email','p-email',GovBB.D['p-email'],'email')}</div>
+${btns()}</form>`,
+
+'child-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-firstname">Child's first name</label>${inp('c-firstname','c-firstname',GovBB.D['c-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-lastname">Child's last name</label>${inp('c-lastname','c-lastname',GovBB.D['c-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-gender">Child's gender</label>${sel('c-gender','c-gender',['Male','Female'])}</div>
+${dateFields('c-dob','Child\'s date of birth','For example, 15 03 2015')}
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-year-group">Year group or grade level</label>${sel('c-year-group','c-year-group',['Reception','Infants A','Infants B','Class 1','Class 2','Class 3','Class 4','Form 1','Form 2','Form 3','Form 4','Form 5','Lower 6','Upper 6'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-school">Current or most recent school (optional)</label><p class="govbb-hint">Leave blank if your child has not attended school.</p>${inp('c-school','c-school',GovBB.D['c-school'])}</div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Does your child have any diagnosed learning needs or disabilities?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('c-special-needs',['Yes','No','Not sure'])}</div></fieldset>
+<div data-show-when-name="c-special-needs" data-show-when-value="Yes" style="display:${GovBB.D['c-special-needs']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="c-needs-detail">Describe the learning needs or disability</label><p class="govbb-hint">For example: dyslexia, autism spectrum, hearing impairment.</p><textarea class="govbb-textarea" id="c-needs-detail" data-field="c-needs-detail" rows="3" style="width:100%;">${GovBB.D['c-needs-detail']||''}</textarea></div></div>
+${btns()}</form>`,
+
+'schooling-reason':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Why do you want to home school?</h1>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Main reason for applying</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('hs-reason',['Religious or moral values','Medical or health reasons','Child\'s individual learning needs','Dissatisfaction with current school options','Returning from abroad','Other'])}</div></fieldset>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hs-reason-detail">Tell us more about your reasons</label><p class="govbb-hint">Explain in your own words why home schooling is the best option for your child.</p><textarea class="govbb-textarea" id="hs-reason-detail" data-field="hs-reason-detail" rows="5" style="width:100%;">${GovBB.D['hs-reason-detail']||''}</textarea></div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Have you home schooled this child before?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('hs-previous',['Yes','No'])}</div></fieldset>
+<div data-show-when-name="hs-previous" data-show-when-value="Yes" style="display:${GovBB.D['hs-previous']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="hs-prev-detail">Previous home schooling details</label><p class="govbb-hint">Tell us when you home schooled and under what arrangement.</p><textarea class="govbb-textarea" id="hs-prev-detail" data-field="hs-prev-detail" rows="3" style="width:100%;">${GovBB.D['hs-prev-detail']||''}</textarea></div></div>
+${btns()}</form>`,
+
+'curriculum-plan':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your teaching plan</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Tell us how you plan to teach your child at home.</p>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cp-curriculum">Curriculum or programme you will follow</label><p class="govbb-hint">For example: Caribbean Primary Exit Assessment (CPEA), Cambridge Primary, home-designed programme.</p>${inp('cp-curriculum','cp-curriculum',GovBB.D['cp-curriculum'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cp-subjects">Subjects you will teach</label><p class="govbb-hint">List all subjects, for example: Mathematics, English Language, Science, Social Studies, Religious Education.</p><textarea class="govbb-textarea" id="cp-subjects" data-field="cp-subjects" rows="3" style="width:100%;">${GovBB.D['cp-subjects']||''}</textarea></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cp-hours">Hours of teaching per week</label><p class="govbb-hint">Enter the total number of hours you plan to teach each week, for example 20.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="cp-hours" data-field="cp-hours" inputmode="numeric" value="${GovBB.D['cp-hours']||''}" style="max-width:7rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cp-resources">Learning materials and resources</label><p class="govbb-hint">Tell us what books, online tools, or other materials you will use.</p><textarea class="govbb-textarea" id="cp-resources" data-field="cp-resources" rows="3" style="width:100%;">${GovBB.D['cp-resources']||''}</textarea></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cp-assessment">How will you check your child's progress?</label><p class="govbb-hint">Describe how you will know your child is learning, for example: weekly tests, portfolios, end-of-term reviews.</p><textarea class="govbb-textarea" id="cp-assessment" data-field="cp-assessment" rows="3" style="width:100%;">${GovBB.D['cp-assessment']||''}</textarea></div>
+${btns()}</form>`,
+
+'parent-qualifications':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your qualifications and teaching ability</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pq-level">Your highest qualification</label>${sel('pq-level','pq-level',['CSEC/CXC passes','CAPE passes','Associate Degree','Bachelor\'s Degree','Postgraduate qualification','Teaching certificate or diploma','No formal qualification'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pq-subjects">Subjects you are confident to teach</label><p class="govbb-hint">List the subjects you feel you can teach well at your child's level.</p><textarea class="govbb-textarea" id="pq-subjects" data-field="pq-subjects" rows="3" style="width:100%;">${GovBB.D['pq-subjects']||''}</textarea></div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Have you ever worked as a teacher or tutor?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('pq-teaching-exp',['Yes','No'])}</div></fieldset>
+<div data-show-when-name="pq-teaching-exp" data-show-when-value="Yes" style="display:${GovBB.D['pq-teaching-exp']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pq-teaching-detail">Tell us about your teaching or tutoring experience</label><textarea class="govbb-textarea" id="pq-teaching-detail" data-field="pq-teaching-detail" rows="3" style="width:100%;">${GovBB.D['pq-teaching-detail']||''}</textarea></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pq-support">Other support you will use</label><p class="govbb-hint">For example: tutors for specific subjects, online courses, community learning groups.</p><textarea class="govbb-textarea" id="pq-support" data-field="pq-support" rows="3" style="width:100%;">${GovBB.D['pq-support']||''}</textarea></div>
+${btns()}</form>`,
+
+'declaration':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this application you confirm the following.</p>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+${chk('d-accurate','d-accurate','All information I have given is true and accurate.')}
+${chk('d-environment','d-environment','I have a safe and suitable learning environment at home.')}
+${chk('d-assessments','d-assessments','I agree that my child will sit national assessments as required by the Ministry of Education.')}
+${chk('d-visit','d-visit','I agree that an officer from the Ministry may visit my home to check the learning environment.')}
+${chk('d-notify','d-notify','I will tell the Ministry if my circumstances change or if I stop home schooling.')}
+</div></fieldset>
+${btns()}</form>`,
+
+'check':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('First name',GovBB.D['p-firstname'],'parent-details')}
+${GovBB.summaryRow('Last name',GovBB.D['p-lastname'],'parent-details')}
+${GovBB.summaryRow('NRN',GovBB.D['p-nrn'],'parent-details')}
+${GovBB.summaryRow('Relationship to child',GovBB.D['p-relationship'],'parent-details')}
+${GovBB.summaryRow('Parish',GovBB.D['p-parish'],'parent-details')}
+${GovBB.summaryRow('Phone',GovBB.D['p-phone'],'parent-details')}
+${GovBB.summaryRow('Email',GovBB.D['p-email'],'parent-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About your child</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Child\'s name',GovBB.D['c-firstname']+' '+GovBB.D['c-lastname'],'child-details')}
+${GovBB.summaryRow('Date of birth',fmtDate('c-dob'),'child-details')}
+${GovBB.summaryRow('Year group',GovBB.D['c-year-group'],'child-details')}
+${GovBB.summaryRow('Current school',GovBB.D['c-school'],'child-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Reason for home schooling</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Main reason',GovBB.D['hs-reason'],'schooling-reason')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Teaching plan</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Curriculum',GovBB.D['cp-curriculum'],'curriculum-plan')}
+${GovBB.summaryRow('Hours per week',GovBB.D['cp-hours'],'curriculum-plan')}</dl>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">By sending this application you confirm all information is true and accurate.</p></div>
+<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Send application</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div></div>`,
+
+'confirmation':()=>{GovBB.D['ref-hs']=GovBB.D['ref-hs']||('MoE-HS-'+Math.floor(10000+Math.random()*90000));return `<div>
+<div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Application sent</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+<p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-hs']}</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+<ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+<li style="margin-bottom:var(--spacing-s);">The Ministry of Education will review your application within <strong>15 working days</strong>.</li>
+<li style="margin-bottom:var(--spacing-s);">An Education Officer may contact you to arrange a home visit.</li>
+<li style="margin-bottom:var(--spacing-s);">You will get a written decision by email or post. If approved, you will receive a home schooling permit.</li></ol>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you do not hear from us within 15 working days, call <strong>+1 (246) 535-0600</strong> and quote your reference number.</p>
+<a href="/" class="govbb-link">Back to home</a></div>`;}
+};
+
+const REQUIRED={
+'parent-details':[{id:'p-firstname',msg:'Enter your first name'},{id:'p-lastname',msg:'Enter your last name'},{id:'p-nrn',msg:'Enter your NRN'},{id:'p-relationship',msg:'Choose your relationship to the child'},{id:'p-address',msg:'Enter your address'},{id:'p-parish',msg:'Choose your parish'},{id:'p-phone',msg:'Enter your phone number'},{id:'p-email',msg:'Enter your email address'}],
+'child-details':[{id:'c-firstname',msg:'Enter your child\'s first name'},{id:'c-lastname',msg:'Enter your child\'s last name'},{id:'c-gender',msg:'Choose your child\'s gender'},{id:'c-dob-day',msg:'Enter the day of your child\'s date of birth'},{id:'c-dob-month',msg:'Enter the month of your child\'s date of birth'},{id:'c-dob-year',msg:'Enter the year of your child\'s date of birth'},{id:'c-year-group',msg:'Choose your child\'s year group'}],
+'schooling-reason':[{id:'hs-reason-0',msg:'Choose the main reason for home schooling'},{id:'hs-reason-detail',msg:'Tell us more about your reasons'}],
+'curriculum-plan':[{id:'cp-curriculum',msg:'Enter the curriculum or programme you will follow'},{id:'cp-subjects',msg:'List the subjects you will teach'},{id:'cp-hours',msg:'Enter the number of hours you will teach per week'}],
+'parent-qualifications':[{id:'pq-level',msg:'Choose your highest qualification'},{id:'pq-subjects',msg:'List the subjects you are confident to teach'}],
+'declaration':[{id:'d-accurate',msg:'You must confirm the information is accurate'},{id:'d-environment',msg:'You must confirm you have a suitable learning environment'},{id:'d-assessments',msg:'You must agree to national assessments'},{id:'d-visit',msg:'You must agree to Ministry visits'},{id:'d-notify',msg:'You must agree to notify the Ministry of changes'}],
+};
+
+GovBB.init({appElementId:'app',flow:FLOW,pages:PAGES,validate:function(page){var rules=REQUIRED[page];if(!rules)return[];return rules.filter(function(r){var el=document.getElementById(r.id);if(!el)return false;if(el.type==='checkbox')return !el.checked;if(el.type==='radio')return !document.querySelector('input[name="'+el.name+'"]:checked');return !el.value.trim();});}});
+</script>
+</body>
+</html>

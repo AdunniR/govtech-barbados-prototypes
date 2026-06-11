@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for term's leave – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});html+='</ul></div>';document.getElementById('app').insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+const DEPT='Ministry of Education, Technological and Vocational Training';
+function cap(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+DEPT+'</p>';}
+function sel(id,field,opts,ph){ph=ph||'Select one';return '<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+field+'"><option value="">'+ph+'</option>'+opts.map(function(o){return '<option value="'+o+'"'+(GovBB.D[field]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>';}
+function rad(name,opts){return opts.map(function(o,i){return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+name+'-'+i+'" name="'+name+'" data-field="'+name+'" value="'+o+'"'+(GovBB.D[name]===o?' checked':'')+'/><label class="govbb-radio-item__label" for="'+name+'-'+i+'">'+o+'</label></div>';}).join('');}
+function chk(id,field,label){return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="'+id+'" name="'+id+'" data-field="'+field+'"'+(GovBB.D[field]?' checked':'')+'/><label class="govbb-checkbox-item__label" for="'+id+'">'+label+'</label></div>';}
+function inp(id,field,val,type){type=type||'text';return '<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+field+'" value="'+(val||'')+'"'+(type==='email'?' autocomplete="email"':'')+'/></div>';}
+function dateFields(prefix,label,hint){hint=hint||'For example, 01 09 2026';return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">'+label+'</legend><p class="govbb-hint">'+hint+'</p><div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-day" data-field="'+prefix+'-day" inputmode="numeric" value="'+(GovBB.D[prefix+'-day']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="'+prefix+'-month" data-field="'+prefix+'-month" inputmode="numeric" value="'+(GovBB.D[prefix+'-month']||'')+'" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="'+prefix+'-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="'+prefix+'-year" data-field="'+prefix+'-year" inputmode="numeric" value="'+(GovBB.D[prefix+'-year']||'')+'" /></div></div></div></fieldset>';}
+function btns(){return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Continue</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div>';}
+function fmtDate(p){var d=GovBB.D[p+'-day'],m=GovBB.D[p+'-month'],y=GovBB.D[p+'-year'];return [d,m,y].filter(Boolean).join(' / ');}
+
+const SCHOOLS=['Alexandra School','Barbados Community College','Christ Church Foundation School','Coleridge & Parry School','Combermere School','Deighton Griffith Secondary School','Eden Lodge Secondary School','Foundation Secondary School','Frederick Smith Secondary School','Grantley Adams Memorial School','Harrison College','Lester Vaughan School','Lodge School','Queen\'s College','Springer Memorial School','St. Andrew\'s Anglican Secondary School','St. George Secondary School','St. Leonard\'s Boys\' School','St. Lucy Secondary School','St. Michael School','Other (nursery/primary/special)'];
+
+const FLOW=['start','teacher-details','school-details','leave-details','previous-leave','declaration','check','confirmation'];
+const PAGES={
+'start':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Apply for a term's leave</h1><hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to apply for a full term's leave from your teaching post. Your principal will be notified to add their recommendation.</p>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>8 minutes</strong>.</p>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+<ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+<li style="margin-bottom:var(--spacing-xs);">National Registration Number (NRN)</li>
+<li style="margin-bottom:var(--spacing-xs);">Your school and post details</li>
+<li style="margin-bottom:var(--spacing-xs);">Dates of the leave you are requesting</li>
+<li style="margin-bottom:var(--spacing-xs);">Details of any previous term's leave</li>
+</ul>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Need help?</h2>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Call <strong>+1 (246) 535-0600</strong> or email <strong>termsleaveapplications@mes.gov.bb</strong>.</p>
+<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div></div>`,
+
+'teacher-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="t-firstname">First name</label>${inp('t-firstname','t-firstname',GovBB.D['t-firstname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="t-lastname">Last name</label>${inp('t-lastname','t-lastname',GovBB.D['t-lastname'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="t-nrn">National Registration Number (NRN)</label><p class="govbb-hint">Your 11-character NRN, for example 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="t-nrn" data-field="t-nrn" value="${GovBB.D['t-nrn']||''}" placeholder="110915-0048" style="max-width:14rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="t-phone">Phone number</label>${inp('t-phone','t-phone',GovBB.D['t-phone'],'tel')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="t-email">Email address</label>${inp('t-email','t-email',GovBB.D['t-email'],'email')}</div>
+${btns()}</form>`,
+
+'school-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your school and post</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-school">School</label>${sel('s-school','s-school',SCHOOLS,'Select your school')}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-post">Teaching post or subject(s)</label><p class="govbb-hint">For example: Mathematics teacher, Deputy Principal.</p>${inp('s-post','s-post',GovBB.D['s-post'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-employment-type">Employment type</label>${sel('s-employment-type','s-employment-type',['Permanent','Temporary','Contract'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-years">Years at this school</label><p class="govbb-hint">Enter a number, for example 3.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="s-years" data-field="s-years" inputmode="numeric" value="${GovBB.D['s-years']||''}" style="max-width:7rem;" /></div></div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="s-principal">Principal's name</label>${inp('s-principal','s-principal',GovBB.D['s-principal'])}</div>
+${btns()}</form>`,
+
+'leave-details':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Leave details</h1>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="l-term">Which term are you applying for?</label>${sel('l-term','l-term',['Term 1 (September–December)','Term 2 (January–March)','Term 3 (April–June)'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="l-year">School year</label>${sel('l-year','l-year',['2025–2026','2026–2027','2027–2028'])}</div>
+${dateFields('l-start','Date leave begins','For example, 01 09 2026')}
+${dateFields('l-end','Date leave ends','For example, 19 12 2026')}
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="l-reason-type">Reason for leave</label>${sel('l-reason-type','l-reason-type',['Study leave','Maternity/Paternity leave','Medical leave','Family responsibility','Personal reasons','Other'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="l-reason-detail">Tell us more about your reason</label><p class="govbb-hint">Give enough detail for the Ministry to assess your application.</p><textarea class="govbb-textarea" id="l-reason-detail" data-field="l-reason-detail" rows="4" style="width:100%;">${GovBB.D['l-reason-detail']||''}</textarea></div>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Will you return to your post after this leave?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('l-return',['Yes','Not sure','No'])}</div></fieldset>
+${btns()}</form>`,
+
+'previous-leave':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Previous term's leave</h1>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Have you taken a term's leave before?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${rad('pl-taken',['Yes','No'])}</div></fieldset>
+<div data-show-when-name="pl-taken" data-show-when-value="Yes" style="display:${GovBB.D['pl-taken']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pl-when">When did you take leave?</label><p class="govbb-hint">For example: Term 2, 2022–2023.</p>${inp('pl-when','pl-when',GovBB.D['pl-when'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pl-school">School you were at during that leave</label>${inp('pl-school','pl-school',GovBB.D['pl-school'])}</div>
+<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pl-reason">Reason for that leave</label>${inp('pl-reason','pl-reason',GovBB.D['pl-reason'])}</div>
+</div>
+${btns()}</form>`,
+
+'declaration':()=>`<form novalidate>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this application you confirm the following.</p>
+<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+${chk('d-accurate','d-accurate','All information I have given is true and accurate.')}
+${chk('d-principal','d-principal','I have informed my principal of this application.')}
+${chk('d-return','d-return','I understand that approval is subject to the needs of the school and the Ministry.')}
+</div></fieldset>
+${btns()}</form>`,
+
+'check':()=>`<div>${cap()}<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Name',GovBB.D['t-firstname']+' '+GovBB.D['t-lastname'],'teacher-details')}
+${GovBB.summaryRow('NRN',GovBB.D['t-nrn'],'teacher-details')}
+${GovBB.summaryRow('Phone',GovBB.D['t-phone'],'teacher-details')}
+${GovBB.summaryRow('Email',GovBB.D['t-email'],'teacher-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">School and post</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('School',GovBB.D['s-school'],'school-details')}
+${GovBB.summaryRow('Post',GovBB.D['s-post'],'school-details')}
+${GovBB.summaryRow('Principal',GovBB.D['s-principal'],'school-details')}</dl>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Leave</h2><dl style="margin-bottom:var(--spacing-m);">
+${GovBB.summaryRow('Term',GovBB.D['l-term'],'leave-details')}
+${GovBB.summaryRow('Year',GovBB.D['l-year'],'leave-details')}
+${GovBB.summaryRow('Start date',fmtDate('l-start'),'leave-details')}
+${GovBB.summaryRow('End date',fmtDate('l-end'),'leave-details')}
+${GovBB.summaryRow('Reason',GovBB.D['l-reason-type'],'leave-details')}</dl>
+<div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">By sending this application you confirm all information is true and accurate. Your principal will receive a notification to add their recommendation.</p></div>
+<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Send application</button><button type="button" class="govbb-btn--link" onclick="back()">Back</button></div></div>`,
+
+'confirmation':()=>{GovBB.D['ref-tl']=GovBB.D['ref-tl']||('MoE-TL-'+Math.floor(10000+Math.random()*90000));return `<div>
+<div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Application sent</h1>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+<p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-tl']}</p></div>
+<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+<ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+<li style="margin-bottom:var(--spacing-s);">Your principal will receive a notification to add their recommendation online.</li>
+<li style="margin-bottom:var(--spacing-s);">The Ministry will review both your application and the principal's recommendation within <strong>10 working days</strong>.</li>
+<li style="margin-bottom:var(--spacing-s);">You will be notified of the decision by email.</li></ol>
+<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Questions? Call <strong>+1 (246) 535-0600</strong> or email <strong>termsleaveapplications@mes.gov.bb</strong> with your reference number.</p>
+<a href="/" class="govbb-link">Back to home</a></div>`;}
+};
+
+const REQUIRED={
+'teacher-details':[{id:'t-firstname',msg:'Enter your first name'},{id:'t-lastname',msg:'Enter your last name'},{id:'t-nrn',msg:'Enter your NRN'},{id:'t-phone',msg:'Enter your phone number'},{id:'t-email',msg:'Enter your email address'}],
+'school-details':[{id:'s-school',msg:'Choose your school'},{id:'s-post',msg:'Enter your teaching post'},{id:'s-employment-type',msg:'Choose your employment type'},{id:'s-principal',msg:'Enter your principal\'s name'}],
+'leave-details':[{id:'l-term',msg:'Choose which term you are applying for'},{id:'l-year',msg:'Choose the school year'},{id:'l-start-day',msg:'Enter the day leave begins'},{id:'l-start-month',msg:'Enter the month leave begins'},{id:'l-start-year',msg:'Enter the year leave begins'},{id:'l-end-day',msg:'Enter the day leave ends'},{id:'l-end-month',msg:'Enter the month leave ends'},{id:'l-end-year',msg:'Enter the year leave ends'},{id:'l-reason-type',msg:'Choose a reason for leave'},{id:'l-reason-detail',msg:'Tell us more about your reason'}],
+'declaration':[{id:'d-accurate',msg:'You must confirm the information is accurate'},{id:'d-principal',msg:'You must confirm you have informed your principal'},{id:'d-return',msg:'You must confirm you understand approval conditions'}],
+};
+GovBB.init({appElementId:'app',flow:FLOW,pages:PAGES,validate:function(page){var rules=REQUIRED[page];if(!rules)return[];return rules.filter(function(r){var el=document.getElementById(r.id);if(!el)return false;if(el.type==='checkbox')return !el.checked;return !el.value.trim();});}});
+</script>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply to teach temporarily – Ministry of Education, Technological and Vocational Training</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+const FORM_NAME = 'Application for Temporary Teacher';
+const DEPT = 'Ministry of Education, Technological and Vocational Training';
+
+const FLOW = [
+  'start',
+  'personal-details',
+  'contact',
+  'qualifications',
+  'teaching-details',
+  'experience',
+  'availability',
+  'references',
+  'declaration',
+  'check',
+  'confirmation'
+];
+
+/* ── Helpers ── */
+function caption(text) {
+  return `<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${text}</p>`;
+}
+
+function fmtDate(prefix) {
+  const d = GovBB.D[prefix+'-day'], m = GovBB.D[prefix+'-month'], y = GovBB.D[prefix+'-year'];
+  if (!d && !m && !y) return '';
+  return [d, m, y].filter(Boolean).join(' / ');
+}
+
+function selectHtml(id, field, options, placeholder) {
+  placeholder = placeholder || 'Select one';
+  return `<div class="govbb-select-wrapper">
+    <select class="govbb-select" id="${id}" name="${id}" data-field="${field}">
+      <option value="">${placeholder}</option>
+      ${options.map(o => `<option value="${o}"${GovBB.D[field]===o?' selected':''}>${o}</option>`).join('')}
+    </select>
+    <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+  </div>`;
+}
+
+function radioGroup(name, options) {
+  return options.map((o, i) => `
+    <div class="govbb-radio-item">
+      <input class="govbb-radio" type="radio" id="${name}-${i}" name="${name}" data-field="${name}" value="${o}"${GovBB.D[name]===o?' checked':''}/>
+      <label class="govbb-radio-item__label" for="${name}-${i}">${o}</label>
+    </div>`).join('');
+}
+
+function checkboxItem(id, field, label) {
+  return `<div class="govbb-checkbox-item">
+    <input class="govbb-checkbox" type="checkbox" id="${id}" name="${id}" data-field="${field}"${GovBB.D[field]?' checked':''}/>
+    <label class="govbb-checkbox-item__label" for="${id}">${label}</label>
+  </div>`;
+}
+
+function subjectChecks() {
+  const subjects = [
+    'Mathematics','English Language','Sciences (Biology, Chemistry, Physics)',
+    'Information Technology','Social Studies','History','Geography',
+    'Spanish','French','Physical Education','Visual Arts','Music',
+    'Home Economics','Technical Drawing','Business Studies','Religious Education'
+  ];
+  return subjects.map((s, i) => checkboxItem('subj-'+i, 'subj-'+s.replace(/\W+/g,'_'), s)).join('');
+}
+
+function selectedSubjects() {
+  const subjects = [
+    'Mathematics','English Language','Sciences (Biology, Chemistry, Physics)',
+    'Information Technology','Social Studies','History','Geography',
+    'Spanish','French','Physical Education','Visual Arts','Music',
+    'Home Economics','Technical Drawing','Business Studies','Religious Education'
+  ];
+  const sel = subjects.filter(s => GovBB.D['subj-'+s.replace(/\W+/g,'_')]);
+  return sel.length ? sel.join(', ') : '';
+}
+
+function decimalChecked() {
+  return GovBB.D['decl-accurate'] && GovBB.D['decl-consent'];
+}
+
+/* ── Pages ── */
+const PAGES = {
+
+  /* ── Start ── */
+  'start': () => `
+    <div>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Apply to teach temporarily</h1>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to apply for a temporary teaching position at a government school in Barbados.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+        <li style="margin-bottom:var(--spacing-xs);">National Registration Number (NRN)</li>
+        <li style="margin-bottom:var(--spacing-xs);">Details of your highest teaching qualification</li>
+        <li style="margin-bottom:var(--spacing-xs);">The subjects and school levels you can teach</li>
+        <li style="margin-bottom:var(--spacing-xs);">Details of two references (name and phone number)</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Before you start</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must be eligible to work in Barbados. You will be asked to upload your qualifications and testimonials at a later stage in the process.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Need help?</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Call the Ministry on <strong>+1 (246) 430-2700</strong> or email <strong>education@barbados.gov.bb</strong>.</p>
+
+      <div style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Start application</button>
+      </div>
+    </div>`,
+
+  /* ── Personal details ── */
+  'personal-details': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="firstname">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="firstname" name="firstname" data-field="firstname" autocomplete="given-name" value="${GovBB.D['firstname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="lastname">Last name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="lastname" name="lastname" data-field="lastname" autocomplete="family-name" value="${GovBB.D['lastname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nrn">National Registration Number (NRN)</label>
+        <p class="govbb-hint">Your 11-character NRN, for example 110915-0048. You can find this on your national ID card.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nrn" name="nrn" data-field="nrn" value="${GovBB.D['nrn']||''}" placeholder="110915-0048" style="max-width:14rem;" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date of birth</legend>
+        <p class="govbb-hint">For example, 15 09 1985</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-day" name="dob-day" data-field="dob-day" inputmode="numeric" value="${GovBB.D['dob-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-month" name="dob-month" data-field="dob-month" inputmode="numeric" value="${GovBB.D['dob-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="dob-year" name="dob-year" data-field="dob-year" inputmode="numeric" value="${GovBB.D['dob-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="gender">Gender</label>
+        ${selectHtml('gender','gender',['Male','Female','Prefer not to say'])}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="marital-status">Marital status</label>
+        ${selectHtml('marital-status','marital-status',['Single','Married','Common-law','Widowed','Divorced','Separated'])}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nationality">Nationality</label>
+        ${selectHtml('nationality','nationality',['Barbadian','Barbadian/Other','CARICOM national','Other'])}
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Contact ── */
+  'contact': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contact details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line1">Address line 1</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address-line1" name="address-line1" data-field="address-line1" autocomplete="address-line1" value="${GovBB.D['address-line1']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line2">Address line 2 (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address-line2" name="address-line2" data-field="address-line2" autocomplete="address-line2" value="${GovBB.D['address-line2']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        ${selectHtml('parish','parish', GovBB.PARISHES,'Select a parish')}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="postal-code">Postal code (optional)</label>
+        <p class="govbb-hint">For example, BB11000.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="postal-code" name="postal-code" data-field="postal-code" value="${GovBB.D['postal-code']||''}" placeholder="BB11000" style="max-width:10rem;" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-mobile">Mobile number</label>
+        <p class="govbb-hint">For example, 246 249-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-mobile" name="phone-mobile" data-field="phone-mobile" autocomplete="tel" value="${GovBB.D['phone-mobile']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-home">Home number (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-home" name="phone-home" data-field="phone-home" value="${GovBB.D['phone-home']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="email">Email address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="email" name="email" data-field="email" autocomplete="email" value="${GovBB.D['email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Qualifications ── */
+  'qualifications': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your qualifications</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Tell us about your highest teaching qualification. You will be asked to upload certificates later.</p>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="qual-level">Highest qualification</label>
+        ${selectHtml('qual-level','qual-level',[
+          'Associate Degree',
+          'Bachelor\'s Degree (non-education)',
+          'Bachelor of Education (B.Ed.)',
+          'Postgraduate Diploma in Education (PGDE)',
+          'Master\'s Degree',
+          'Doctorate (PhD)',
+          'Teaching Certificate'
+        ])}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="qual-subject">Field of study or subject area</label>
+        <p class="govbb-hint">For example: Mathematics, Early Childhood Education.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="qual-subject" name="qual-subject" data-field="qual-subject" value="${GovBB.D['qual-subject']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="qual-institution">Institution</label>
+        <p class="govbb-hint">Where you got your qualification, for example Barbados Community College or University of the West Indies.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="qual-institution" name="qual-institution" data-field="qual-institution" value="${GovBB.D['qual-institution']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="qual-year">Year obtained</label>
+        <p class="govbb-hint">For example, 2018.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="qual-year" name="qual-year" data-field="qual-year" inputmode="numeric" value="${GovBB.D['qual-year']||''}" style="max-width:7rem;" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="qual-other">Other relevant qualifications (optional)</label>
+        <p class="govbb-hint">List any other degrees, diplomas, or certificates that are relevant to teaching.</p>
+        <textarea class="govbb-textarea" id="qual-other" name="qual-other" data-field="qual-other" rows="3" style="width:100%;">${GovBB.D['qual-other']||''}</textarea>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Teaching details ── */
+  'teaching-details': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Subjects and school level</h1>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Which subjects can you teach?</legend>
+        <p class="govbb-hint">Choose all that apply.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${subjectChecks()}
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="other-subjects">Other subjects (optional)</label>
+        <p class="govbb-hint">List any subjects not in the list above.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="other-subjects" name="other-subjects" data-field="other-subjects" value="${GovBB.D['other-subjects']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Which school level do you prefer to teach?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${radioGroup('school-level',['Primary (ages 5–11)','Secondary (ages 11–16)','Sixth form (ages 16–18)','All levels'])}
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Are you registered with the Barbados Accreditation Council (BAC)?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${radioGroup('bac-registered',['Yes','No','Application pending'])}
+        </div>
+        <div data-show-when-name="bac-registered" data-show-when-value="Yes" style="display:${GovBB.D['bac-registered']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+          <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+            <label class="govbb-label" for="bac-number">BAC registration number</label>
+            <div class="govbb-input-wrapper">
+              <input class="govbb-input" type="text" id="bac-number" name="bac-number" data-field="bac-number" value="${GovBB.D['bac-number']||''}" style="max-width:14rem;" />
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Experience ── */
+  'experience': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your teaching experience</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="years-experience">How many years have you taught?</label>
+        <p class="govbb-hint">If less than one year, enter 0.</p>
+        ${selectHtml('years-experience','years-experience',['0 (no experience)','Less than 1 year','1–2 years','3–5 years','6–10 years','More than 10 years'],'Select one')}
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Are you currently employed as a teacher?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${radioGroup('currently-employed',['Yes','No'])}
+        </div>
+        <div data-show-when-name="currently-employed" data-show-when-value="Yes" style="display:${GovBB.D['currently-employed']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+          <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+            <label class="govbb-label" for="current-school">Current school or institution</label>
+            <div class="govbb-input-wrapper">
+              <input class="govbb-input" type="text" id="current-school" name="current-school" data-field="current-school" value="${GovBB.D['current-school']||''}" />
+            </div>
+          </div>
+        </div>
+        <div data-show-when-name="currently-employed" data-show-when-value="No" style="display:${GovBB.D['currently-employed']==='No'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+          <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+            <label class="govbb-label" for="last-school">Last school or institution (optional)</label>
+            <div class="govbb-input-wrapper">
+              <input class="govbb-input" type="text" id="last-school" name="last-school" data-field="last-school" value="${GovBB.D['last-school']||''}" />
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="exp-summary">Brief summary of your teaching experience (optional)</label>
+        <p class="govbb-hint">Tell us about the types of schools, levels, and subjects you have taught. Keep it to 3–4 sentences.</p>
+        <textarea class="govbb-textarea" id="exp-summary" name="exp-summary" data-field="exp-summary" rows="4" style="width:100%;">${GovBB.D['exp-summary']||''}</textarea>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Availability ── */
+  'availability': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your availability</h1>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">When can you start?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${radioGroup('start-when',['Immediately','Within 2 weeks','Within 1 month','More than 1 month away'])}
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">What type of position are you looking for?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${radioGroup('position-type',['Full-time','Part-time','Either'])}
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Which parishes are you able to travel to?</legend>
+        <p class="govbb-hint">Choose all that apply.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${GovBB.PARISHES.map((p, i) => checkboxItem('parish-pref-'+i, 'parish-pref-'+p.replace(/\W+/g,'_'), p)).join('')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── References ── */
+  'references': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">References</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Give the names and phone numbers of two people who can speak about your character or teaching ability. They must not be family members.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);">
+        <legend class="govbb-fieldset__legend" style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">Reference 1</legend>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref1-name">Full name</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="ref1-name" name="ref1-name" data-field="ref1-name" value="${GovBB.D['ref1-name']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref1-phone">Phone number</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="tel" id="ref1-phone" name="ref1-phone" data-field="ref1-phone" value="${GovBB.D['ref1-phone']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref1-relationship">How do they know you?</label>
+          <p class="govbb-hint">For example: former principal, colleague, lecturer.</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="ref1-relationship" name="ref1-relationship" data-field="ref1-relationship" value="${GovBB.D['ref1-relationship']||''}" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);">
+        <legend class="govbb-fieldset__legend" style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">Reference 2</legend>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref2-name">Full name</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="ref2-name" name="ref2-name" data-field="ref2-name" value="${GovBB.D['ref2-name']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref2-phone">Phone number</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="tel" id="ref2-phone" name="ref2-phone" data-field="ref2-phone" value="${GovBB.D['ref2-phone']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="ref2-relationship">How do they know you?</label>
+          <p class="govbb-hint">For example: former principal, colleague, lecturer.</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="ref2-relationship" name="ref2-relationship" data-field="ref2-relationship" value="${GovBB.D['ref2-relationship']||''}" />
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Declaration ── */
+  'declaration': () => `
+    <form novalidate>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this application you confirm the following.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-visually-hidden">Declaration statements</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+          ${checkboxItem('decl-accurate','decl-accurate','The information I have given is true and accurate to the best of my knowledge.')}
+          ${checkboxItem('decl-consent','decl-consent','I agree that the Ministry of Education may check my details and contact my references.')}
+          ${checkboxItem('decl-criminal','decl-criminal','I confirm I do not have any convictions that would make me unsuitable to work with children.')}
+          ${checkboxItem('decl-updates','decl-updates','I will tell the Ministry if any of my details change before a placement is offered.')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </form>`,
+
+  /* ── Check your answers ── */
+  'check': () => {
+    const selectedParishes = GovBB.PARISHES.filter(p => GovBB.D['parish-pref-'+p.replace(/\W+/g,'_')]);
+    return `
+    <div>
+      ${caption(DEPT)}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Check everything below before you send your application.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('First name', GovBB.D['firstname'], 'personal-details')}
+        ${GovBB.summaryRow('Last name', GovBB.D['lastname'], 'personal-details')}
+        ${GovBB.summaryRow('NRN', GovBB.D['nrn'], 'personal-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'personal-details')}
+        ${GovBB.summaryRow('Gender', GovBB.D['gender'], 'personal-details')}
+        ${GovBB.summaryRow('Marital status', GovBB.D['marital-status'], 'personal-details')}
+        ${GovBB.summaryRow('Nationality', GovBB.D['nationality'], 'personal-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Address', [GovBB.D['address-line1'],GovBB.D['address-line2']].filter(Boolean).join(', '), 'contact')}
+        ${GovBB.summaryRow('Parish', GovBB.D['parish'], 'contact')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-mobile'], 'contact')}
+        ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'], 'contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'], 'contact')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Qualifications</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Highest qualification', GovBB.D['qual-level'], 'qualifications')}
+        ${GovBB.summaryRow('Field of study', GovBB.D['qual-subject'], 'qualifications')}
+        ${GovBB.summaryRow('Institution', GovBB.D['qual-institution'], 'qualifications')}
+        ${GovBB.summaryRow('Year obtained', GovBB.D['qual-year'], 'qualifications')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Subjects and school level</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Subjects', selectedSubjects() || GovBB.D['other-subjects'], 'teaching-details')}
+        ${GovBB.summaryRow('School level', GovBB.D['school-level'], 'teaching-details')}
+        ${GovBB.summaryRow('BAC registered', GovBB.D['bac-registered'], 'teaching-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Experience</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Years of experience', GovBB.D['years-experience'], 'experience')}
+        ${GovBB.summaryRow('Currently employed', GovBB.D['currently-employed'], 'experience')}
+        ${GovBB.summaryRow('School or institution', GovBB.D['current-school']||GovBB.D['last-school'], 'experience')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Availability</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Can start', GovBB.D['start-when'], 'availability')}
+        ${GovBB.summaryRow('Position type', GovBB.D['position-type'], 'availability')}
+        ${GovBB.summaryRow('Parishes', selectedParishes.join(', '), 'availability')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">References</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Reference 1', GovBB.D['ref1-name'], 'references')}
+        ${GovBB.summaryRow('Reference 1 phone', GovBB.D['ref1-phone'], 'references')}
+        ${GovBB.summaryRow('Reference 2', GovBB.D['ref2-name'], 'references')}
+        ${GovBB.summaryRow('Reference 2 phone', GovBB.D['ref2-phone'], 'references')}
+      </dl>
+
+      <div style="background:var(--color-yellow-20);border-left:4px solid var(--color-yellow-40);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">By sending this application you confirm that the information you have given is true and accurate.</p>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Send application</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
+    </div>`;
+  },
+
+  /* ── Confirmation ── */
+  'confirmation': () => {
+    const ref = 'MoE-TT-' + Math.floor(10000 + Math.random() * 90000);
+    GovBB.D['ref-number'] = GovBB.D['ref-number'] || ref;
+    return `
+    <div>
+      <div style="background:var(--color-teal-20);border-left:6px solid var(--color-teal-40);padding:var(--spacing-m) var(--spacing-l);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Application sent</h1>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your reference number is</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);letter-spacing:0.05em;">${GovBB.D['ref-number']}</p>
+        <p class="govbb-hint" style="margin-top:var(--spacing-xs);">Keep this number — you may need it if you contact us.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ol class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+        <li style="margin-bottom:var(--spacing-s);">The Ministry will review your application within <strong>10 working days</strong>.</li>
+        <li style="margin-bottom:var(--spacing-s);">If your application is shortlisted, we will contact you to arrange an interview or request copies of your certificates and testimonials.</li>
+        <li style="margin-bottom:var(--spacing-s);">A temporary teaching contract will be offered once checks are complete.</li>
+      </ol>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you do not hear from us within 10 working days, call <strong>+1 (246) 430-2700</strong> and quote your reference number.</p>
+
+      <a href="/" class="govbb-link">Back to home</a>
+    </div>`;
+  }
+};
+
+/* ── Validation ── */
+const REQUIRED = {
+  'personal-details': [
+    {id:'firstname', msg:'Enter your first name'},
+    {id:'lastname',  msg:'Enter your last name'},
+    {id:'nrn',       msg:'Enter your National Registration Number'},
+    {id:'dob-day',   msg:'Enter the day of your date of birth'},
+    {id:'dob-month', msg:'Enter the month of your date of birth'},
+    {id:'dob-year',  msg:'Enter the year of your date of birth'},
+  ],
+  'contact': [
+    {id:'address-line1', msg:'Enter your address'},
+    {id:'parish',        msg:'Choose your parish'},
+    {id:'phone-mobile',  msg:'Enter your mobile number'},
+    {id:'email',         msg:'Enter your email address'},
+  ],
+  'qualifications': [
+    {id:'qual-level',       msg:'Choose your highest qualification'},
+    {id:'qual-subject',     msg:'Enter your field of study'},
+    {id:'qual-institution', msg:'Enter the name of your institution'},
+    {id:'qual-year',        msg:'Enter the year you got your qualification'},
+  ],
+  'teaching-details': [
+    {id:'school-level',   msg:'Choose which school level you prefer'},
+    {id:'bac-registered', msg:'Tell us whether you are registered with the BAC'},
+  ],
+  'experience': [
+    {id:'years-experience',  msg:'Choose how many years you have taught'},
+    {id:'currently-employed',msg:'Tell us whether you are currently employed as a teacher'},
+  ],
+  'availability': [
+    {id:'start-when',    msg:'Tell us when you can start'},
+    {id:'position-type', msg:'Choose the type of position you are looking for'},
+  ],
+  'references': [
+    {id:'ref1-name',         msg:'Enter the name of your first reference'},
+    {id:'ref1-phone',        msg:'Enter a phone number for your first reference'},
+    {id:'ref1-relationship', msg:'Tell us how your first reference knows you'},
+    {id:'ref2-name',         msg:'Enter the name of your second reference'},
+    {id:'ref2-phone',        msg:'Enter a phone number for your second reference'},
+    {id:'ref2-relationship', msg:'Tell us how your second reference knows you'},
+  ],
+  'declaration': [
+    {id:'decl-accurate', msg:'You must confirm the information is accurate'},
+    {id:'decl-consent',  msg:'You must agree to the Ministry checking your details'},
+    {id:'decl-criminal', msg:'You must confirm the criminal record statement'},
+    {id:'decl-updates',  msg:'You must agree to notify us of any changes'},
+  ],
+};
+
+/* ── Init ── */
+GovBB.init({
+  appElementId: 'app',
+  flow: FLOW,
+  pages: PAGES,
+  validate: function(page) {
+    var rules = REQUIRED[page];
+    if (!rules) return [];
+    return rules.filter(function(r) {
+      var el = document.getElementById(r.id);
+      if (!el) return false;
+      if (el.type === 'checkbox') return !el.checked;
+      return !el.value.trim();
+    });
+  }
+});
+</script>
+</body>
+</html>

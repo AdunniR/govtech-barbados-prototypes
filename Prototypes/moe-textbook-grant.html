@@ -84,9 +84,9 @@ function cap(t) {
 function sel(id, label, opts, hint) {
   return '<div class="govbb-form-group"><label class="govbb-label" for="' + id + '">' + label + '</label>' +
     (hint ? '<div class="govbb-hint">' + hint + '</div>' : '') +
-    '<select class="govbb-select" id="' + id + '" name="' + id + '"><option value="">Select</option>' +
+    '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '"><option value="">Select</option>' +
     opts.map(function(o) { return '<option value="' + o + '">' + o + '</option>'; }).join('') +
-    '</select></div>';
+    '</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
 }
 function rad(name, label, opts, hint) {
   return '<fieldset class="govbb-fieldset"><legend class="govbb-label">' + label + '</legend>' +
@@ -114,9 +114,9 @@ function dateFields(prefix, label) {
     '</div></fieldset>';
 }
 function btns(next, back) {
-  return '<div class="govbb-button-group">' +
-    '<button class="govbb-button" onclick="GovBB.next()">' + (next || 'Continue') + '</button>' +
-    (back ? '<a href="#" class="govbb-link" onclick="GovBB.back();return false;">Back</a>' : '') +
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+    (back ? '<button type="button" class="govbb-btn--secondary" onclick="GovBB.back()">Previous</button>' : '') +
+    '<button type="button" class="govbb-btn" onclick="GovBB.next()">' + (next || 'Continue') + '</button>' +
     '</div>';
 }
 function fmtDate(prefix) {
@@ -149,7 +149,7 @@ var PAGES = {
       '<li>confirmation of enrollment from the school principal (may be requested)</li>' +
       '</ul>' +
       '<div class="govbb-inset-text"><p class="govbb-body">The grant is paid once per academic year. Only one application per student will be accepted.</p></div>' +
-      '<button class="govbb-button govbb-button--start" onclick="GovBB.next()">Start now</button>';
+      '<button class="govbb-btn" onclick="GovBB.next()">Start now</button>';
   },
 
   'applicant-details': function() {

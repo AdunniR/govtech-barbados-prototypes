@@ -412,7 +412,7 @@ const PAGES = {
           <select class="govbb-select" id="nationality" name="nationality" data-field="nationality"
             onchange="(function(v){var el=document.getElementById('period-residing-group');if(el)el.style.display=v&&v!=='Barbadian'?'block':'none';})(this.value)">
             <option value="">Select one</option>
-            ${['Barbadian','Barbadian/Other','CARICOM national','Other'].map(o=>`<option value="${o}"${GovBB.D['nationality']===o?' selected':''}>${o}</option>`).join('')}
+            ${['Barbadian','CARICOM national','Other'].map(o=>`<option value="${o}"${GovBB.D['nationality']===o?' selected':''}>${o}</option>`).join('')}
           </select>
           <span class="govbb-select__chevron" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>

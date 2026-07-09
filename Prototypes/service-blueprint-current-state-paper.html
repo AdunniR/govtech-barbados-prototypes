@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service blueprint — Current state (paper forms)</title>
+<style>
+  :root{
+    --navy:#00267F;
+    --navy-deep:#001a5c;
+    --gold:#FFC726;
+    --offwhite:#F7F3F3;
+    --charcoal:#2C2C2C;
+    --ink:#1a1a1a;
+    --card:#ffffff;
+    --line:#d8d2d2;
+    --red:#B42318;
+    --green:#1C7C43;
+    --purple:#6941C6;
+    --amber:#B54708;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.45;
+  }
+  header{
+    background:var(--charcoal);
+    color:#fff;
+    padding:36px 40px 30px;
+    border-bottom:6px solid var(--red);
+  }
+  header .eyebrow{
+    display:inline-block;
+    background:var(--red);
+    color:#fff;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:3px;
+    margin-bottom:14px;
+  }
+  header h1{
+    font-size:clamp(24px,3.2vw,40px);
+    font-weight:800;
+    line-height:1.15;
+    max-width:1100px;
+  }
+  header h1 span{color:var(--gold);}
+  header .meta{margin-top:14px;font-size:14px;color:#cfc8c8;max-width:1050px;}
+  header .meta strong{color:#fff;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:14px 40px;background:#fff;border-bottom:1px solid var(--line);
+    color:var(--ink);font-size:13px;position:sticky;top:0;z-index:40;
+  }
+  .chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;flex:none;}
+  .tagchip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 7px;border-radius:10px;display:inline-block;
+  }
+  .tag-vendor{background:#dbe4ff;color:var(--navy);}
+  .tag-org{background:#fff1c2;color:#7a5b00;}
+  .tag-both{background:#e4e0f7;color:var(--purple);}
+  .tag-pain{background:#fde0dc;color:var(--red);}
+  .tag-workaround{background:#feefc7;color:var(--amber);}
+
+  .scroller{overflow-x:auto;padding:26px 24px 60px;}
+  .blueprint{
+    display:grid;
+    grid-template-columns:150px repeat(7, minmax(268px, 1fr));
+    min-width:2050px;
+  }
+  .stagehead{
+    background:var(--charcoal);
+    color:#fff;
+    padding:14px 16px 12px;
+    border-radius:8px 8px 0 0;
+    margin:0 5px;
+  }
+  .stagehead .num{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  .stagehead h2{font-size:16px;font-weight:800;line-height:1.25;margin-top:2px;}
+  .stagehead p{font-size:12px;color:#c9c2c2;margin-top:4px;}
+  .corner{background:transparent;}
+
+  .lanelabel{
+    position:sticky;left:0;z-index:20;background:var(--offwhite);
+    padding:14px 12px 14px 2px;display:flex;align-items:flex-start;
+  }
+  .lanelabel .inner{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--charcoal);border-left:5px solid var(--charcoal);padding-left:9px;line-height:1.3;
+  }
+  .lanelabel .inner small{display:block;font-weight:500;text-transform:none;letter-spacing:0;color:#6b6363;font-size:11.5px;margin-top:3px;}
+  .lane-evidence .inner{border-left-color:var(--gold);}
+
+  .cell{padding:12px 8px;margin:0 5px;display:flex;flex-direction:column;gap:10px;}
+  .cardx{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px 11px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .cardx h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--charcoal);}
+  .cardx p{font-size:12.5px;color:#3d3838;}
+  .cardx ul{padding-left:16px;font-size:12.5px;color:#3d3838;}
+  .cardx li{margin:2px 0;}
+  .cardx .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .cardx.evidence{background:#fffaf0;border-color:#f1de9d;}
+  .cardx.evidence h4{color:#7a5b00;}
+  .cardx.support{background:#f2f0f0;border-style:dashed;}
+  .cardx.vendorline{border-left:4px solid var(--navy);}
+  .cardx.orgline{border-left:4px solid var(--gold);}
+  .cardx.bothline{border-left:4px solid var(--purple);}
+
+  .bline{grid-column:1 / -1;display:flex;align-items:center;gap:12px;padding:6px 5px;}
+  .bline .rule{flex:1;border-top:2px dashed var(--charcoal);opacity:.55;}
+  .bline .label{
+    font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--charcoal);background:var(--offwhite);padding:0 4px;position:sticky;left:0;
+  }
+
+  .panels{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;padding:0 40px 60px;max-width:1500px;
+  }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .panel h3{
+    font-size:15px;font-weight:800;color:var(--charcoal);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:10px;border-bottom:3px solid var(--red);
+    display:inline-block;padding-bottom:3px;
+  }
+  .panel ul{padding-left:18px;font-size:13.5px;}
+  .panel li{margin:6px 0;}
+  .panel.workaround h3{border-bottom-color:var(--amber);}
+
+  footer{background:var(--charcoal);color:#cfc8c8;font-size:12.5px;padding:18px 40px;}
+  footer strong{color:var(--gold);}
+  @media print{.legend{position:static;}.scroller{overflow:visible;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Service blueprint · Current state · Paper forms</span>
+  <h1>Temporary restaurant licence <span>&amp;</span> Environmental Health Officer request — as it works today</h1>
+  <p class="meta">
+    <strong>Ministry of Health — Environmental Health Department.</strong>
+    The paper journey using forms A14:086 and A14:410, where the entire process — application, review, inspection and collection — happens in person at the polyclinic responsible for the <em>event location's</em> catchment. Randall Phillips runs an unofficial Google Forms workaround; every other polyclinic is fully paper-based.
+  </p>
+</header>
+
+<div class="legend">
+  <span class="chip"><span class="swatch" style="background:var(--navy)"></span>Vendor journey</span>
+  <span class="chip"><span class="swatch" style="background:var(--gold)"></span>Organizer journey</span>
+  <span class="chip"><span class="swatch" style="background:var(--purple)"></span>Shared</span>
+  <span class="chip"><span class="tagchip tag-pain">Pain point</span> problem in the current process</span>
+  <span class="chip"><span class="tagchip tag-workaround">Workaround</span> unofficial fix in use today</span>
+</div>
+
+<div class="scroller">
+<div class="blueprint">
+
+  <div class="corner"></div>
+  <div class="stagehead"><div class="num">Stage 1</div><h2>Find out</h2><p>Word of mouth &amp; guesswork</p></div>
+  <div class="stagehead"><div class="num">Stage 2</div><h2>Travel &amp; apply in person</h2><p>Paper forms at the polyclinic</p></div>
+  <div class="stagehead"><div class="num">Stage 3</div><h2>Record &amp; triage</h2><p>Clerk logs, senior reviews</p></div>
+  <div class="stagehead"><div class="num">Stage 4</div><h2>Inspect</h2><p>Premises &amp; site checks</p></div>
+  <div class="stagehead"><div class="num">Stage 5</div><h2>Approve &amp; collect</h2><p>Second trip to the polyclinic</p></div>
+  <div class="stagehead"><div class="num">Stage 6</div><h2>Event day</h2><p>Officers on the ground</p></div>
+  <div class="stagehead"><div class="num">Stage 7</div><h2>After the event</h2><p>Paper records &amp; manual reports</p></div>
+
+  <!-- PHYSICAL EVIDENCE -->
+  <div class="lanelabel lane-evidence"><div class="inner">Physical evidence<small>What people see &amp; touch</small></div></div>
+
+  <div class="cell">
+    <div class="cardx evidence"><h4>No single front door</h4><p>No central content page. Requirements, the two-week rule and the catchment system are learned by phoning a polyclinic, visiting, or asking around.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Paper forms A14:086 &amp; A14:410</h4><p>Dotted-line forms filled at the front desk: applicant details, event, period, foods and source, contact numbers, handwritten signature. The officer request goes “through the Principal EHO”.</p></div>
+    <div class="cardx evidence"><h4>Randall Phillips only: Google Form</h4><p>An online form with auto-generated licence — capped at ~31 free automated emails/month, then manual download-and-send.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>No receipt or reference</h4><p>Nothing standard to show an application is in progress; status checks happen by phoning the polyclinic.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Officer at the premises</h4><p>The inspection visit itself is the only visible signal that the application is moving.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Paper licence</h4><p>Signed and stamped at the polyclinic, collected in person. Late applications: hand-delivered on site on event day.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Licence at the stall</h4><p>Paper licence displayed; no way to verify authenticity beyond the stamp.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Files &amp; officer reports</h4><p>Paper files at each polyclinic; Randall Phillips keeps a spreadsheet backed up daily to a share drive and thumb drive.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span></div></div>
+  </div>
+
+  <!-- CUSTOMER ACTIONS -->
+  <div class="lanelabel"><div class="inner">Customer actions<small>Vendor &amp; organizer</small></div></div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor works out where to go</h4><p>Must apply to the polyclinic for the <strong>event's</strong> catchment — not where they live. A St Lucy vendor with an event in Oistins travels to Randall Phillips. New entrants often go to the wrong one.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-pain">Pain point</span></div></div>
+    <div class="cardx orgline"><h4>Organizer books vendors</h4><p>Often only days before the event — leaving vendors no time to meet the two-week rule.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor visits the polyclinic — trip 1</h4><p>Fills form A14:086 at the front desk at least two weeks before the event; hands over food handler certificates; signs by hand.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span></div></div>
+    <div class="cardx orgline"><h4>Organizer submits form A14:410</h4><p>Requests officer attendance through the Principal EHO — dates, hours, address and a “purpose” they must state themselves, even though attendance is mandatory whenever food is served.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx bothline"><h4>Waits without visibility</h4><p>No reference number, no status. Applicants phone the polyclinic to check progress.</p><div class="tags"><span class="tagchip tag-both">Shared</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor hosts an inspection</h4><p>If they have no licensed food business, officers inspect where the food is prepared before recommending the licence.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span></div></div>
+    <div class="cardx orgline"><h4>Organizer meets officers on site</h4><p>Site visit arranged by phone. Stall layout problems often surface only on event day because no plan was seen beforehand.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor returns to collect — trip 2</h4><p>Phoned when the licence is ready; travels back to the polyclinic to sign for and collect it.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-pain">Pain point</span></div></div>
+    <div class="cardx orgline"><h4>Organizer learns officer costs</h4><p>Fee discussion happens off-form; some organizers see individual officer rates and push for cheaper junior officers.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor trades</h4><p>Displays the paper licence. Vendors who applied late may receive theirs on site — or be refused and sent home.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-pain">Pain point</span></div></div>
+    <div class="cardx orgline"><h4>Organizer hosts &amp; pays</h4><p>Pays the attending officers for their hours, including overtime, weekends and public holidays.</p><div class="tags"><span class="tagchip tag-org">Organizer</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx bothline"><h4>Done</h4><p>Licence lapses after the event (by law, up to 30 days at the same location). The next event means starting from scratch, in person, again.</p><div class="tags"><span class="tagchip tag-both">Shared</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of interaction</span><span class="rule"></span></div>
+
+  <!-- FRONTSTAGE -->
+  <div class="lanelabel"><div class="inner">Frontstage<small>Visible service &amp; staff</small></div></div>
+
+  <div class="cell">
+    <div class="cardx"><h4>Phone &amp; front desk advice</h4><p>Polyclinic staff explain requirements, catchments and the two-week rule case by case — and redirect people who came to the wrong polyclinic.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Front desk intake</h4><p>Clerk receives the paper form, checks it's within the two-week window and that certificates are attached.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Phone follow-ups</h4><p>Staff field status calls; cross-catchment cases mean the applicant may hear from a second polyclinic.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Officer visits</h4><p>Premises inspection (vendor) and site visit (organizer), scheduled by phone around officer availability.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Collection at the counter</h4><p>Stamped, signed paper licence handed over; applicant advised of conditions. RPPC's workaround emails a generated licence instead.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Officers at the event</h4><p>Inspect every food stall, sanitation and waste disposal; discretion over late or unlicensed vendors — lenient where safe, closure where not.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>No follow-up loop</h4><p>No systematic communication back to applicants; awareness relies on the same informal channels next season.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of visibility</span><span class="rule"></span></div>
+
+  <!-- BACKSTAGE -->
+  <div class="lanelabel"><div class="inner">Backstage<small>Polyclinic &amp; EHD staff</small></div></div>
+
+  <div class="cell">
+    <div class="cardx"><h4>Redirecting misdirected applicants</h4><p>Staff time spent explaining catchments and sending people to the correct polyclinic — a recurring load, especially at peak.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Clerk logs the paper form</h4><p>Office clerk records the application; the file physically moves clerk → senior EHO. At RPPC, Mr Taylor and the office manager alone hold access to the Google Form back end.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Senior review</h4><p>Senior EHO checks: existing licensed food business → fast track; otherwise inspection needed. Food prepared outside the catchment → letter/call to the neighbouring polyclinic for assistance.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Officer allocation</h4><p>Senior assigns officers for inspections and site visits around existing workload; findings recorded in written officer reports.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Two-signature approval on paper</h4><p>Senior recommends → Principal EHO signs (a “rubber stamp” by agreement with the MOH for temporary permits). Clerk phones the applicant to collect.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Event-day discretion</h4><p>Officers deliver late licences on site and judge borderline stalls case by case — knowing vendors have already spent on raw materials.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Manual reporting</h4><p>Monthly and quarterly figures compiled by hand from paper files for the Chief, Minister and PS. Outbreak traceback means pulling paper reports.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of internal interaction</span><span class="rule"></span></div>
+
+  <!-- SUPPORT -->
+  <div class="lanelabel"><div class="inner">Support processes<small>Systems &amp; enablers</small></div></div>
+
+  <div class="cell">
+    <div class="cardx support"><h4>Catchment knowledge in heads</h4><p>The catchment map exists, but matching an event address to a polyclinic is done by staff knowledge, not by any system.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Paper storage + one Google account</h4><p>Filing cabinets at six polyclinics; at RPPC, Google Forms + Sheets under a personal account — access tied to the individual, not the post, and it breaks when staff rotate.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Mixed mailboxes</h4><p>Officers have individual addresses; some polyclinic EHD units still use Gmail rather than government email.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Phone-based scheduling</h4><p>Inspections and site visits coordinated entirely by phone between clerk, senior, officers and applicant.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Manual licence production</h4><p>Typed/stamped licences; RPPC's extension auto-generates a licence with a barcode but hits the 31-per-month email cap.</p><div class="tags"><span class="tagchip tag-workaround">Workaround</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>No field verification</h4><p>Nothing stops a paper or emailed licence being reproduced; officers rely on stamps and recognition.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Data trapped on paper</h4><p>Only RPPC can analyse foods sold or produce comparative officer statistics; the Ministry wants off Google entirely.</p><div class="tags"><span class="tagchip tag-pain">Pain point</span></div></div>
+  </div>
+
+</div>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <h3>The cost of the current process</h3>
+    <ul>
+      <li><strong>Two trips minimum</strong> for every vendor — apply in person, return to collect — sometimes across the island, because the event's catchment decides the polyclinic.</li>
+      <li><strong>Peak-season crunch:</strong> Crop Over and Christmas spikes hit a fully manual intake at some polyclinics.</li>
+      <li><strong>No status visibility:</strong> every "where's my licence?" is a phone call for staff to answer.</li>
+      <li><strong>Late applications cascade:</strong> vendors booked days out → licences hand-delivered on event day → officers forced into on-the-spot refusals.</li>
+      <li><strong>Fee friction:</strong> organizers exposed to individual officer rates negotiate for cheaper juniors.</li>
+    </ul>
+  </div>
+  <div class="panel workaround">
+    <h3>The Randall Phillips workaround</h3>
+    <ul>
+      <li>A Google Form with an extension that generates a barcoded licence and emails it — <strong>over 1,000 applications processed</strong> since it was set up.</li>
+      <li>Capped at ~31 free automated emails per month; extras are downloaded and sent manually.</li>
+      <li>Access belongs to individuals (Mr Taylor + office manager), not the post — it doesn't survive staff rotation and exists at one polyclinic only.</li>
+      <li>Data exported daily to a share drive and thumb drive for backup.</li>
+      <li>Proof of demand and of the concept — “a band-aid until we get something” — and the reason EHD approached GovTech.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Companion blueprint: <strong><a href="service-blueprint-future-state-online.html" style="color:var(--gold)">Future state — online forms routed to polyclinic email</a></strong>. Sources: alignment meeting notes &amp; transcript, 30 Jun 2026 · EHD questions document · Ministry of Health forms A14:086 &amp; A14:410.
+</footer>
+
+<a class="feedback-fab" href="https://github.com/AdunniR/govtech-barbados-prototypes/issues/1" target="_blank" rel="noopener">💬 Leave feedback</a>
+<style>
+  .feedback-fab{
+    position:fixed;right:22px;bottom:22px;z-index:100;
+    background:var(--charcoal);color:#fff;text-decoration:none;
+    font-weight:700;font-size:14px;padding:12px 18px;border-radius:999px;
+    box-shadow:0 4px 14px rgba(0,0,0,.3);border:2px solid var(--gold);
+  }
+  .feedback-fab:hover{background:var(--red);}
+  @media print{.feedback-fab{display:none;}}
+</style>
+
+</body>
+</html>

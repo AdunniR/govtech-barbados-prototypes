@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service blueprint — Future state (online forms to polyclinic email)</title>
+<style>
+  :root{
+    --navy:#00267F;
+    --navy-deep:#001a5c;
+    --gold:#FFC726;
+    --offwhite:#F7F3F3;
+    --charcoal:#2C2C2C;
+    --ink:#1a1a1a;
+    --card:#ffffff;
+    --line:#d8d2d2;
+    --red:#B42318;
+    --green:#1C7C43;
+    --purple:#6941C6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.45;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:36px 40px 30px;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{
+    display:inline-block;background:var(--gold);color:var(--charcoal);
+    font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:3px;margin-bottom:14px;
+  }
+  header h1{font-size:clamp(24px,3.2vw,40px);font-weight:800;line-height:1.15;max-width:1100px;}
+  header h1 span{color:var(--gold);}
+  header .meta{margin-top:14px;font-size:14px;color:#cdd6f0;max-width:1050px;}
+  header .meta strong{color:#fff;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:14px 40px;background:#fff;border-bottom:1px solid var(--line);
+    color:var(--ink);font-size:13px;position:sticky;top:0;z-index:40;
+  }
+  .chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;flex:none;}
+  .tagchip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 7px;border-radius:10px;display:inline-block;
+  }
+  .tag-vendor{background:#dbe4ff;color:var(--navy);}
+  .tag-org{background:#fff1c2;color:#7a5b00;}
+  .tag-both{background:#e4e0f7;color:var(--purple);}
+  .tag-new{background:#d3f3e0;color:var(--green);}
+  .tag-changed{background:#dbe9ff;color:#1550b0;}
+  .tag-same{background:#ececec;color:#666;}
+  .tag-removed{background:#fde0dc;color:var(--red);}
+
+  .scroller{overflow-x:auto;padding:26px 24px 60px;}
+  .blueprint{
+    display:grid;
+    grid-template-columns:150px repeat(7, minmax(268px, 1fr));
+    min-width:2050px;
+  }
+  .stagehead{
+    background:var(--navy);color:#fff;padding:14px 16px 12px;
+    border-radius:8px 8px 0 0;margin:0 5px;
+  }
+  .stagehead .num{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  .stagehead h2{font-size:16px;font-weight:800;line-height:1.25;margin-top:2px;}
+  .stagehead p{font-size:12px;color:#c3cdea;margin-top:4px;}
+  .corner{background:transparent;}
+
+  .lanelabel{
+    position:sticky;left:0;z-index:20;background:var(--offwhite);
+    padding:14px 12px 14px 2px;display:flex;align-items:flex-start;
+  }
+  .lanelabel .inner{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--charcoal);border-left:5px solid var(--navy);padding-left:9px;line-height:1.3;
+  }
+  .lanelabel .inner small{display:block;font-weight:500;text-transform:none;letter-spacing:0;color:#6b6363;font-size:11.5px;margin-top:3px;}
+  .lane-evidence .inner{border-left-color:var(--gold);}
+  .lane-support .inner{border-left-color:var(--charcoal);}
+
+  .cell{padding:12px 8px;margin:0 5px;display:flex;flex-direction:column;gap:10px;}
+  .cardx{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px 11px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .cardx h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--navy-deep);}
+  .cardx p{font-size:12.5px;color:#3d3838;}
+  .cardx ul{padding-left:16px;font-size:12.5px;color:#3d3838;}
+  .cardx li{margin:2px 0;}
+  .cardx .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .cardx.evidence{background:#fffaf0;border-color:#f1de9d;}
+  .cardx.evidence h4{color:#7a5b00;}
+  .cardx.support{background:#f2f0f0;border-style:dashed;}
+  .cardx.vendorline{border-left:4px solid var(--navy);}
+  .cardx.orgline{border-left:4px solid var(--gold);}
+  .cardx.bothline{border-left:4px solid var(--purple);}
+  .cardx.isnew{outline:2px solid var(--green);outline-offset:-1px;}
+  .cardx.ischanged{outline:2px solid #1550b0;outline-offset:-1px;}
+
+  .bline{grid-column:1 / -1;display:flex;align-items:center;gap:12px;padding:6px 5px;}
+  .bline .rule{flex:1;border-top:2px dashed var(--charcoal);opacity:.55;}
+  .bline .label{
+    font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--charcoal);background:var(--offwhite);padding:0 4px;position:sticky;left:0;
+  }
+
+  .panels{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;padding:0 40px 60px;max-width:1500px;
+  }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .panel h3{
+    font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:10px;border-bottom:3px solid var(--gold);
+    display:inline-block;padding-bottom:3px;
+  }
+  .panel ul{padding-left:18px;font-size:13.5px;}
+  .panel li{margin:6px 0;}
+  .panel.removedp h3{border-bottom-color:var(--red);}
+  .panel.newp h3{border-bottom-color:var(--green);}
+  .panel.samep h3{border-bottom-color:#999;}
+
+  footer{background:var(--charcoal);color:#cfc8c8;font-size:12.5px;padding:18px 40px;}
+  footer strong{color:var(--gold);}
+  @media print{.legend{position:static;}.scroller{overflow:visible;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Service blueprint · Future state · Online forms → polyclinic email</span>
+  <h1>Temporary restaurant licence <span>&amp;</span> Environmental Health Officer request — the digitised process</h1>
+  <p class="meta">
+    <strong>Ministry of Health — Environmental Health Department × GovTech Barbados.</strong>
+    The launch-scope process: applicants apply once, online, on alpha.gov.bb; the application is routed by the event's catchment and <strong>emailed to the correct polyclinic's role-based EHD mailbox</strong>. Review, inspection and approval stay with polyclinic staff — unchanged — while travel, collection trips and the Google Forms workaround disappear. Case management comes later.
+  </p>
+</header>
+
+<div class="legend">
+  <span class="chip"><span class="swatch" style="background:var(--navy)"></span>Vendor journey</span>
+  <span class="chip"><span class="swatch" style="background:var(--gold)"></span>Organizer journey</span>
+  <span class="chip"><span class="swatch" style="background:var(--purple)"></span>Shared</span>
+  <span class="chip"><span class="tagchip tag-new">New</span> didn't exist before</span>
+  <span class="chip"><span class="tagchip tag-changed">Changed</span> same step, done differently</span>
+  <span class="chip"><span class="tagchip tag-same">Unchanged</span> deliberately kept as-is</span>
+</div>
+
+<div class="scroller">
+<div class="blueprint">
+
+  <div class="corner"></div>
+  <div class="stagehead"><div class="num">Stage 1</div><h2>Find out &amp; prepare</h2><p>Content pages replace guesswork</p></div>
+  <div class="stagehead"><div class="num">Stage 2</div><h2>Apply online</h2><p>One form, from anywhere</p></div>
+  <div class="stagehead"><div class="num">Stage 3</div><h2>Route by email</h2><p>Auto-routed to the right polyclinic</p></div>
+  <div class="stagehead"><div class="num">Stage 4</div><h2>Inspect &amp; assess</h2><p>Same checks, better prepared</p></div>
+  <div class="stagehead"><div class="num">Stage 5</div><h2>Approve &amp; issue digitally</h2><p>E-licence emailed, invoice after approval</p></div>
+  <div class="stagehead"><div class="num">Stage 6</div><h2>Event day</h2><p>Scan-to-verify on the ground</p></div>
+  <div class="stagehead"><div class="num">Stage 7</div><h2>After the event</h2><p>Structured data from day one</p></div>
+
+  <!-- PHYSICAL EVIDENCE -->
+  <div class="lanelabel lane-evidence"><div class="inner">Physical evidence<small>What people see &amp; touch</small></div></div>
+
+  <div class="cell">
+    <div class="cardx evidence isnew"><h4>Entry &amp; content pages on alpha.gov.bb</h4><ul><li>Everything needed listed <em>before</em> the form starts</li><li>Legal definition of “temporary restaurant” &amp; “food”</li><li>Stall requirements + sample stall plan</li><li>“Invoice after approval” cost language; per-polyclinic EHD contacts</li></ul><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+    <div class="cardx evidence isnew"><h4>QR codes &amp; social outreach</h4><p>QR codes straight to the form; Instagram, Facebook, LinkedIn, GIS WhatsApp; links on the Ministry of Health website.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence ischanged"><h4>Two linked online forms</h4><p>Digital successors to A14:086 and A14:410, with branching between them for organizers. Checkbox declaration replaces the handwritten signature.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+    <div class="cardx evidence isnew"><h4>Reference number</h4><p>Confirmation screen with a reference number and “what happens next”.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence isnew"><h4>Confirmation email</h4><p>Applicant gets a copy of their application; the polyclinic gets the application in its EHD mailbox.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence"><h4>Contact from the polyclinic</h4><p>Site visit scheduling call to the organizer; premises inspection for unlicensed vendors.</p><div class="tags"><span class="tagchip tag-same">Unchanged</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence ischanged"><h4>Digital licence by email</h4><p>E-licence with a unique verification code, valid for the event dates (up to 30 days at the same location by law). Advice: download before the event.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+    <div class="cardx evidence ischanged"><h4>Invoice — one total</h4><p>Issued after approval; shows the total for environmental services only, never itemised officer rates.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence ischanged"><h4>Licence at the stall — verifiable</h4><p>Displayed digitally or printed; scanning the code shows whether it's genuine.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx evidence isnew"><h4>Structured records</h4><p>Every application captured as structured data in one consistent format across all seven polyclinics.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+
+  <!-- CUSTOMER ACTIONS -->
+  <div class="lanelabel"><div class="inner">Customer actions<small>Vendor &amp; organizer</small></div></div>
+
+  <div class="cell">
+    <div class="cardx vendorline ischanged"><h4>Vendor reads, doesn't travel</h4><p>Learns the requirements (valid current-year food handler medicals, NRN, two-week rule) from the content page — no trip, no working out which polyclinic to visit.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-changed">Changed</span></div></div>
+    <div class="cardx orgline"><h4>Organizer books vendors early</h4><p>The platform reinforces the two-week rule; organizers see it stated up front, alongside their own obligations.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline ischanged"><h4>Vendor applies online — from anywhere</h4><ul><li>Contact details + NRN</li><li>Event details; foods from structured categories + source</li><li>Branch: “Is the event organized by someone other than you?”</li><li>Handler counts, water &amp; waste, certificate uploads</li><li><strong>No site plan</strong> — organizers only</li><li>Check answers → checkbox declaration → submit</li></ul><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-changed">Changed</span></div></div>
+    <div class="cardx orgline ischanged"><h4>Organizer requests officers online</h4><p>Routed from the licence form, or directly (organizers with no stall). Dates, times, address, <strong>site plan upload</strong>, vendor list. No “why do you need an officer” question — attendance is mandatory when food is served. Declaration covers costs and the site meeting.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx bothline ischanged"><h4>Waits, with a reference number</h4><p>Has written confirmation and a reference to quote. Status checks are still by phone until case management arrives — but the polyclinic can now find the application instantly.</p><div class="tags"><span class="tagchip tag-both">Shared</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor hosts an inspection</h4><p>Unlicensed food businesses still get a premises inspection — the safeguard the two-week window exists for.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-same">Unchanged</span></div></div>
+    <div class="cardx orgline ischanged"><h4>Organizer arrives prepared</h4><p>Site plan already submitted, so the early layout conversation (toilets vs stalls, waste water, garbage) happens against a real document — issues fixed before event day, not on it.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline ischanged"><h4>Vendor receives licence by email</h4><p>No collection trip. Downloads it before the event in case there's no Wi-Fi on site.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-changed">Changed</span></div></div>
+    <div class="cardx orgline ischanged"><h4>Organizer receives one figure</h4><p>A single total for officer attendance after approval — no rate negotiation over junior vs senior officers.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx vendorline"><h4>Vendor trades</h4><p>Displays the licence; cooperates with officer checks on hygiene and sanitation.</p><div class="tags"><span class="tagchip tag-vendor">Vendor</span><span class="tagchip tag-same">Unchanged</span></div></div>
+    <div class="cardx orgline"><h4>Organizer hosts &amp; pays</h4><p>Pays for attending officers, including overtime, weekend and public-holiday rates.</p><div class="tags"><span class="tagchip tag-org">Organizer</span><span class="tagchip tag-same">Unchanged</span></div></div>
+  </div>
+
+  <div class="cell">
+    <div class="cardx bothline ischanged"><h4>Done — and easier next time</h4><p>Licence lapses as before, but the next application is another online form, not another cross-island trip.</p><div class="tags"><span class="tagchip tag-both">Shared</span><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of interaction</span><span class="rule"></span></div>
+
+  <!-- FRONTSTAGE -->
+  <div class="lanelabel"><div class="inner">Frontstage<small>Visible service &amp; staff</small></div></div>
+
+  <div class="cell">
+    <div class="cardx isnew"><h4>Content pages do the explaining</h4><p>The two-week rule, free application, mandatory officer attendance when food is <strong>served</strong> (sold or given away), and all seven polyclinics' EHD contacts — published once, not repeated over the phone.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx isnew"><h4>Branching form logic</h4><p>Organizer question routes between the two forms; only relevant questions are asked; the event address shows which polyclinic will handle the application.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx isnew"><h4>Acknowledgment email</h4><p>Instant confirmation of receipt with next steps — replacing silence between submission and a phone call.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Officer visits</h4><p>Premises inspections and site visits, scheduled by the polyclinic and joined onto existing organizer walk-throughs where possible.</p><div class="tags"><span class="tagchip tag-same">Unchanged</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Approval email + verification page</h4><p>“Your licence has been approved” with the e-licence attached; scanning its code opens a page showing the verified details.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Officers verify by scan</h4><p>Every stall inspected as before — but a scan now separates genuine licences from reproductions.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx isnew"><h4>Seasonal outreach loop</h4><p>Campaign ahead of Crop Over and Christmas peaks — “the new way of doing business with environmental health”.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of visibility</span><span class="rule"></span></div>
+
+  <!-- BACKSTAGE -->
+  <div class="lanelabel"><div class="inner">Backstage<small>Polyclinic &amp; EHD staff</small></div></div>
+
+  <div class="cell">
+    <div class="cardx isnew"><h4>Content governance</h4><p>The Chief approves all content and go-live; agreed response times — GovTech 24 hrs, EHD 1–2 business days. Kerrie King supplies definitions, stall requirements and the price list.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx isnew"><h4>No intake counter work</h4><p>No front-desk transcription, no redirecting misdirected applicants — the form arrives complete, legible and already at the right polyclinic.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Application lands in the EHD mailbox</h4><p>Emailed to the polyclinic's role-based address (e.g. Rppc.ehd@health.gov.bb) based on the event's catchment. Clerk logs it; senior reviews: licensed food business → fast track, otherwise inspection. Cross-catchment prep still triggers a request to the neighbouring polyclinic.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Officer allocation</h4><p>Senior assigns officers by availability and working hours; principal &amp; senior decide event officer allocation — never the office manager.</p><div class="tags"><span class="tagchip tag-same">Unchanged</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Two-signature approval, digital output</h4><p>Senior recommends → Principal EHO signs off (temporary permits still stop at the principal by MOH agreement). The licence is generated and emailed instead of typed, stamped and held for collection; the invoice total is calculated from assigned officers.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Less event-day firefighting</h4><p>On-site licence delivery should shrink as online applications land inside the two-week window; officer discretion remains for the residual late cases.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx ischanged"><h4>Reporting from data, not paper</h4><p>Quarterly figures for the Chief, Minister and PS drawn from structured records; outbreak traceback by query — foods, vendors, locations — not by pulling files.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of internal interaction</span><span class="rule"></span></div>
+
+  <!-- SUPPORT -->
+  <div class="lanelabel lane-support"><div class="inner">Support processes<small>Systems &amp; enablers</small></div></div>
+
+  <div class="cell">
+    <div class="cardx support isnew"><h4>alpha.gov.bb platform</h4><p>Hosting, QR generation, mutual linking with the Ministry website (“source of truth” both ways).</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support isnew"><h4>Catchment routing engine</h4><p>Lands &amp; Surveys shapefiles (Paul Collymore) map the event address to the correct polyclinic automatically — replacing staff memory and the corrected polyclinic list (Edgar Cochrane &amp; Frank Miller removed; Frank Miller area = St Philip catchment).</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support ischanged"><h4>Role-based government mailboxes</h4><p>One EHD address per polyclinic, owned by the post not the person — surviving staff rotation. Two units still on Gmail move to government email before launch.</p><div class="tags"><span class="tagchip tag-changed">Changed</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support"><h4>Phone-based scheduling</h4><p>Site visits and inspections still coordinated by phone at launch; a booking calendar is a candidate for later.</p><div class="tags"><span class="tagchip tag-same">Unchanged</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support isnew"><h4>Licence generation &amp; verification service</h4><p>Auto-generated e-licence with a unique code and scan-to-verify page — no monthly cap, no manual download-and-send. Security approach to be confirmed by EHD management.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support isnew"><h4>Field verification</h4><p>Officers scan licence codes on site to confirm authenticity in real time.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx support isnew"><h4>Structured data foundation</h4><p>Consistent food categories and application data across all polyclinics — the base for future GIS vector mapping and the case management system.</p><div class="tags"><span class="tagchip tag-new">New</span></div></div>
+  </div>
+
+</div>
+</div>
+
+<div class="panels">
+  <div class="panel removedp">
+    <h3>Removed from the journey</h3>
+    <ul>
+      <li><strong>Trip 1 — applying in person</strong> at the event-catchment polyclinic, wherever on the island that is.</li>
+      <li><strong>Trip 2 — collecting the licence</strong> in person after a phone call.</li>
+      <li><strong>The Google Forms workaround:</strong> the 31-email monthly cap, the personal-account access, the daily thumb-drive backups.</li>
+      <li><strong>Front-desk transcription and redirection</strong> of applicants who came to the wrong polyclinic.</li>
+      <li><strong>The “why do you need an officer” question</strong> — attendance is mandatory when food is served, so the form states it instead of asking.</li>
+      <li><strong>Itemised officer rates</strong> shown to organizers, and the negotiation that followed.</li>
+      <li><strong>Handwritten signatures</strong> — replaced by the checkbox declaration.</li>
+    </ul>
+  </div>
+  <div class="panel newp">
+    <h3>New in the journey</h3>
+    <ul>
+      <li>Content pages listing everything needed before the form starts — definitions, stall requirements, sample stall plan, costs.</li>
+      <li>Automatic catchment routing to the correct polyclinic's role-based EHD mailbox.</li>
+      <li>Branching between the two forms so organizers are never left without the officer request.</li>
+      <li>Reference numbers, confirmation emails and a scan-to-verify digital licence.</li>
+      <li>Site plan collected up front (organizers only) so layout problems are fixed before event day.</li>
+      <li>QR codes and multi-channel outreach ahead of the Crop Over peak.</li>
+      <li>Structured data across all seven polyclinics from day one.</li>
+    </ul>
+  </div>
+  <div class="panel samep">
+    <h3>Deliberately unchanged</h3>
+    <ul>
+      <li><strong>The two-week application window</strong> — it exists so officers can inspect food preparation before the event.</li>
+      <li><strong>Clerk → senior → principal review</strong>, including the fast track for already-licensed food businesses and cross-catchment inspection requests.</li>
+      <li><strong>The site visit and early layout conversation</strong> with the organizer.</li>
+      <li><strong>Officer discretion on event day</strong>, including the power to close a stall.</li>
+      <li><strong>Who decides:</strong> content approvals sit with the Chief; officer allocation sits with the principal and senior.</li>
+      <li><strong>Email delivery to polyclinics at launch</strong> — the case management system (status tracking, cross-polyclinic views) is a later phase, not this one.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Companion blueprint: <strong><a href="service-blueprint-current-state-paper.html" style="color:var(--gold)">Current state — paper forms</a></strong>. Sources: alignment meeting notes &amp; transcript, 30 Jun 2026 · EHD questions document · WIP prototypes at govtech-bb.github.io/newforms. Launch target: end of the week of 6 Jul 2026, ahead of Crop Over peak demand.
+</footer>
+
+<a class="feedback-fab" href="https://github.com/AdunniR/govtech-barbados-prototypes/issues/2" target="_blank" rel="noopener">💬 Leave feedback</a>
+<style>
+  .feedback-fab{
+    position:fixed;right:22px;bottom:22px;z-index:100;
+    background:var(--navy);color:#fff;text-decoration:none;
+    font-weight:700;font-size:14px;padding:12px 18px;border-radius:999px;
+    box-shadow:0 4px 14px rgba(0,0,0,.3);border:2px solid var(--gold);
+  }
+  .feedback-fab:hover{background:var(--navy-deep);}
+  @media print{.feedback-fab{display:none;}}
+</style>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey map — Applicant, after submitting a form</title>
+<style>
+  :root{
+    --navy:#00267F;
+    --navy-deep:#001a5c;
+    --gold:#FFC726;
+    --offwhite:#F7F3F3;
+    --charcoal:#2C2C2C;
+    --ink:#1a1a1a;
+    --card:#ffffff;
+    --line:#d8d2d2;
+    --red:#B42318;
+    --green:#1C7C43;
+    --purple:#6941C6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.45;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:36px 40px 30px;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{
+    display:inline-block;background:var(--gold);color:var(--charcoal);
+    font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:3px;margin-bottom:14px;
+  }
+  header h1{font-size:clamp(24px,3.2vw,40px);font-weight:800;line-height:1.15;max-width:1100px;}
+  header h1 span{color:var(--gold);}
+  header .meta{margin-top:14px;font-size:14px;color:#cdd6f0;max-width:1050px;}
+  header .meta strong{color:#fff;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:14px 40px;background:#fff;border-bottom:1px solid var(--line);
+    color:var(--ink);font-size:13px;position:sticky;top:0;z-index:40;
+  }
+  .chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .tagchip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 7px;border-radius:10px;display:inline-block;
+  }
+  .tag-today{background:#d3f3e0;color:var(--green);}
+  .tag-gap{background:#fde0dc;color:var(--red);}
+  .tag-open{background:#dbe9ff;color:#1550b0;}
+
+  .scroller{overflow-x:auto;padding:26px 24px 60px;}
+  .journey{
+    display:grid;
+    grid-template-columns:150px repeat(6, minmax(280px, 1fr));
+    min-width:1900px;
+  }
+  .stagehead{
+    background:var(--navy);color:#fff;padding:14px 16px 12px;
+    border-radius:8px 8px 0 0;margin:0 5px;
+  }
+  .stagehead .num{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  .stagehead h2{font-size:16px;font-weight:800;line-height:1.25;margin-top:2px;}
+  .stagehead p{font-size:12px;color:#c3cdea;margin-top:4px;}
+  .corner{background:transparent;}
+
+  .lanelabel{
+    position:sticky;left:0;z-index:20;background:var(--offwhite);
+    padding:14px 12px 14px 2px;display:flex;align-items:flex-start;
+  }
+  .lanelabel .inner{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--charcoal);border-left:5px solid var(--navy);padding-left:9px;line-height:1.3;
+  }
+  .lanelabel .inner small{display:block;font-weight:500;text-transform:none;letter-spacing:0;color:#6b6363;font-size:11.5px;margin-top:3px;}
+  .lane-touch .inner{border-left-color:var(--gold);}
+  .lane-feel .inner{border-left-color:var(--purple);}
+  .lane-pain .inner{border-left-color:var(--red);}
+  .lane-opp .inner{border-left-color:var(--green);}
+
+  .cell{padding:12px 8px;margin:0 5px;display:flex;flex-direction:column;gap:10px;}
+  .cardx{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px 11px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .cardx h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--navy-deep);}
+  .cardx p{font-size:12.5px;color:#3d3838;}
+  .cardx ul{padding-left:16px;font-size:12.5px;color:#3d3838;}
+  .cardx li{margin:2px 0;}
+  .cardx .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .cardx.touch{background:#fffaf0;border-color:#f1de9d;}
+  .cardx.touch h4{color:#7a5b00;}
+  .cardx.pain{background:#fdf1f0;border-color:#f0c4bf;}
+  .cardx.pain h4{color:var(--red);}
+  .cardx.opp{background:#eefaf3;border-color:#bfe5cd;}
+  .cardx.opp h4{color:var(--green);}
+
+  .feelcard{
+    background:#f4f1fb;border:1px solid #d9d0ef;border-radius:8px;
+    padding:10px 12px 11px;font-size:12.5px;color:#3d3838;
+  }
+  .feelcard .mood{font-size:26px;line-height:1;margin-bottom:4px;display:block;}
+  .feelcard strong{display:block;font-size:12px;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .feelcard em{display:block;margin-top:5px;color:#5a5470;}
+
+  .panels{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;padding:0 40px 60px;max-width:1500px;
+  }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .panel h3{
+    font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:10px;border-bottom:3px solid var(--gold);
+    display:inline-block;padding-bottom:3px;
+  }
+  .panel ul{padding-left:18px;font-size:13.5px;}
+  .panel li{margin:6px 0;}
+  .panel.gapp h3{border-bottom-color:var(--red);}
+  .panel.openp h3{border-bottom-color:#1550b0;}
+
+  footer{background:var(--charcoal);color:#cfc8c8;font-size:12.5px;padding:18px 40px;}
+  footer strong{color:var(--gold);}
+  footer a{color:var(--gold);}
+  @media print{.legend{position:static;}.scroller{overflow:visible;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Journey map · Applicant · After submitting a form</span>
+  <h1>The applicant's journey — <span>“your form has been submitted”… then what?</span></h1>
+  <p class="meta">
+    <strong>A citizen applies to a government program</strong> (e.g. the Ministry of Youth science summer camp) through the GovTech Forms app. Their application moves into the case management system for review — but from where they stand, almost all of that is invisible. The intended experience: submit a form, get told you can track it, check a page, and be notified when something changes. This map shows how far today's experience is from that.
+  </p>
+</header>
+
+<div class="legend">
+  <span class="chip"><span class="tagchip tag-today">Works today</span> live in the sandbox</span>
+  <span class="chip"><span class="tagchip tag-gap">Gap</span> known break in the journey</span>
+  <span class="chip"><span class="tagchip tag-open">Open question</span> design not yet decided</span>
+</div>
+
+<div class="scroller">
+<div class="journey">
+
+  <div class="corner"></div>
+  <div class="stagehead"><div class="num">Stage 1</div><h2>Submit</h2><p>The form is sent</p></div>
+  <div class="stagehead"><div class="num">Stage 2</div><h2>The one email</h2><p>Confirmation — and then silence</p></div>
+  <div class="stagehead"><div class="num">Stage 3</div><h2>Trying to check progress</h2><p>A status page with no front door</p></div>
+  <div class="stagehead"><div class="num">Stage 4</div><h2>Asked for more information</h2><p>The only moment the service reaches out</p></div>
+  <div class="stagehead"><div class="num">Stage 5</div><h2>The decision</h2><p>Approved or rejected — quietly</p></div>
+  <div class="stagehead"><div class="num">Stage 6</div><h2>Afterwards</h2><p>Case closed</p></div>
+
+  <!-- DOING -->
+  <div class="lanelabel"><div class="inner">What they do<small>Actions &amp; behaviour</small></div></div>
+
+  <div class="cell">
+    <div class="cardx"><h4>Completes and submits the form</h4><p>Fills in the application on the Forms app, uploading any documents the form asks for, and submits.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Files the confirmation away</h4><p>Receives the “your form has been submitted” email and keeps the ID number as their reference.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Looks for a way to check — finds none</h4><p>There's no link in the email to a tracking page, nothing on the site pointing to one. If they had the link, the page would tell them their application is under review.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Answers the team's question</h4><p>Gets an email with the officer's question, clicks the link, types a response into a small form. Text only — no way to attach a document at this step.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Finds out — or doesn't</h4><p>No email announces the decision. They learn the outcome only if they happen to revisit the status page (which they were never given).</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Moves on</h4><p>If the case is archived, a revisit shows it as closed. There's nothing left to do — and no record of why things ended the way they did.</p></div>
+  </div>
+
+  <!-- TOUCHPOINTS -->
+  <div class="lanelabel lane-touch"><div class="inner">Touchpoints<small>What the service shows them</small></div></div>
+
+  <div class="cell">
+    <div class="cardx touch"><h4>Forms app confirmation screen</h4><p>The submission goes through; behind the scenes it's forwarded to the case management system with a program code.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Forms app email — with the wrong ID</h4><p>The only email they will ever get. It quotes a submission ID that is different from the ID the case management system uses (shorter, for technical reasons — a fix is under way).</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Track-your-application page</h4><p><em>“This application is under review. The team handling the case will be in touch.”</em> The URL is built by convention from the submission ID — it could be shared today; it just isn't.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Info-request email + response form</h4><p>The officer's typed question arrives by email with a link; the typed answer lands back on the case page and its timeline.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Status page copy</h4><p>Approved: the page changes, nothing else happens. Rejected: <em>“Your application was not successful”</em> — no phone number, no email, no route to contact the team.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>“Your case has been closed”</h4><p>The archived state, if they ever see it.</p></div>
+  </div>
+
+  <!-- FEELING -->
+  <div class="lanelabel lane-feel"><div class="inner">Thinking &amp; feeling<small>Emotional journey</small></div></div>
+
+  <div class="cell">
+    <div class="feelcard"><span class="mood">🙂</span><strong>Hopeful</strong>“Done! That was easy enough.”<em>Confidence is highest at the moment the service's communication is about to stop.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😐</span><strong>Reassured, briefly</strong>“Okay, it went through. I'll keep this number.”<em>The ID they're keeping won't match the one the case team uses.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😕</span><strong>Uncertain</strong>“Did anyone actually get this? Where do I even check?”<em>The wait feels longer for batch-decided programs like summer camp, where nothing moves until every application is in.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">🙂</span><strong>Re-engaged</strong>“Someone's actually looking at it!”<em>The one moment the service proves a human is on the other end.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😟</span><strong>In the dark — or shut out</strong>“Was I accepted? … Not successful? Says who? Who do I even ask?”<em>Rejection with no contact route is the lowest point of the journey.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😶</span><strong>Unresolved</strong>“I guess that's that.”<em>How this ended will shape whether they trust the next government form.</em></div>
+  </div>
+
+  <!-- PAIN -->
+  <div class="lanelabel lane-pain"><div class="inner">Pain points<small>Where the journey breaks</small></div></div>
+
+  <div class="cell">
+    <div class="cardx pain"><h4>No expectations set</h4><p>Nothing tells them when — or how — they'll hear back. Rolling vs batch decisions make one honest answer per program necessary.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Mismatched reference numbers</h4><p>The Forms app ID isn't the case management ID — a support conversation waiting to happen.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>The tracking page has no entryway</h4><p>The page exists; the link is never given out. The Forms app doesn't yet know the application went on to case management, so its email can't explain where to look.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Text only</h4><p>If the team needs a document, this loop can't carry it — attachments only work on the original form.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Silent decisions, dead-end rejections</h4><p>No email on approval or rejection. Rejection copy offers no reason, no contact and no next step.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>No closure</h4><p>“Closed” is the last word. Nothing summarises the outcome or points to what they could do next time.</p></div>
+  </div>
+
+  <!-- OPPORTUNITIES -->
+  <div class="lanelabel lane-opp"><div class="inner">Opportunities<small>What would fix it</small></div></div>
+
+  <div class="cell">
+    <div class="cardx opp"><h4>Set expectations at submit</h4><p>Tell them up front how this program decides: “you'll hear back in X days” or “this form typically responds in X”.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>One ID, one handoff email</h4><p>Align the two reference numbers (fix in progress) and rewrite the confirmation to explain where the application went — deciding whether the Forms app or the CMS sends it.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Share the tracking link</h4><p>The URL is constructible today. Put it in the confirmation email — while being wary that a page that mostly says “nothing has changed” can generate demand instead of absorbing it.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Allow documents in responses</h4><p>Described as not much more work — it just hasn't been requested yet.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Email on every status change</h4><p>The CMS can already send email; wiring it to status changes is “very straightforward”. Pair it with rejection copy that gives a reason and a contact route.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Close with dignity</h4><p>A final message that states the outcome, thanks them, and says what (if anything) they can do next.</p></div>
+  </div>
+
+</div>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <h3>The intended experience</h3>
+    <ul>
+      <li>Fill in a form.</li>
+      <li>Get told you can <strong>track your application somewhere</strong>.</li>
+      <li>Go to a page and see the status.</li>
+      <li>Get <strong>notified</strong> when more information is needed or the status changes.</li>
+    </ul>
+    <p style="font-size:13px;margin-top:10px;color:#3d3838;">That shape is stable across services. Today, only the middle of it exists — and the applicant can't reach it.</p>
+  </div>
+  <div class="panel gapp">
+    <h3>The core problem</h3>
+    <ul>
+      <li>After the submission email, <strong>the service never contacts the applicant again</strong> — except to ask them for something.</li>
+      <li>Every state change (received, approved, rejected, archived) happens on a page <strong>they were never given the link to</strong>.</li>
+      <li>Both push (email on change) and pull (a self-serve status page) have utility — the transcript's conclusion is to do <strong>both</strong>.</li>
+    </ul>
+  </div>
+  <div class="panel openp">
+    <h3>Questions to answer next</h3>
+    <ul>
+      <li>Who owns the post-submission relationship — the Forms app or the case management system?</li>
+      <li>What does honest expectation-setting look like for batch-decided programs (e.g. summer camp allocating everyone at once)?</li>
+      <li>What should rejection say, and what route does an unsuccessful applicant get?</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Companions: <strong><a href="service-blueprint-case-management.html">Service blueprint — forms → decision</a></strong> · <strong><a href="journey-map-cms-official.html">Journey map — government official processing a case</a></strong>. Source: case management system sandbox demo &amp; walkthrough transcript, July 2026.
+</footer>
+
+<script defer src="blueprint-comments.js"
+        data-page="cms-journey-applicant"
+        data-api="https://moe-job-letters.vercel.app/api/blueprint-comments"></script>
+
+</body>
+</html>

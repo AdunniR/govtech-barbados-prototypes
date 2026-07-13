@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey map — Government official processing a case</title>
+<style>
+  :root{
+    --navy:#00267F;
+    --navy-deep:#001a5c;
+    --gold:#FFC726;
+    --offwhite:#F7F3F3;
+    --charcoal:#2C2C2C;
+    --ink:#1a1a1a;
+    --card:#ffffff;
+    --line:#d8d2d2;
+    --red:#B42318;
+    --green:#1C7C43;
+    --purple:#6941C6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.45;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:36px 40px 30px;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{
+    display:inline-block;background:var(--gold);color:var(--charcoal);
+    font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:3px;margin-bottom:14px;
+  }
+  header h1{font-size:clamp(24px,3.2vw,40px);font-weight:800;line-height:1.15;max-width:1100px;}
+  header h1 span{color:var(--gold);}
+  header .meta{margin-top:14px;font-size:14px;color:#cdd6f0;max-width:1050px;}
+  header .meta strong{color:#fff;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:14px 40px;background:#fff;border-bottom:1px solid var(--line);
+    color:var(--ink);font-size:13px;position:sticky;top:0;z-index:40;
+  }
+  .chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .tagchip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 7px;border-radius:10px;display:inline-block;
+  }
+  .tag-today{background:#d3f3e0;color:var(--green);}
+  .tag-gap{background:#fde0dc;color:var(--red);}
+  .tag-open{background:#dbe9ff;color:#1550b0;}
+
+  .scroller{overflow-x:auto;padding:26px 24px 60px;}
+  .journey{
+    display:grid;
+    grid-template-columns:150px repeat(6, minmax(280px, 1fr));
+    min-width:1900px;
+  }
+  .stagehead{
+    background:var(--navy);color:#fff;padding:14px 16px 12px;
+    border-radius:8px 8px 0 0;margin:0 5px;
+  }
+  .stagehead .num{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  .stagehead h2{font-size:16px;font-weight:800;line-height:1.25;margin-top:2px;}
+  .stagehead p{font-size:12px;color:#c3cdea;margin-top:4px;}
+  .corner{background:transparent;}
+
+  .lanelabel{
+    position:sticky;left:0;z-index:20;background:var(--offwhite);
+    padding:14px 12px 14px 2px;display:flex;align-items:flex-start;
+  }
+  .lanelabel .inner{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--charcoal);border-left:5px solid var(--navy);padding-left:9px;line-height:1.3;
+  }
+  .lanelabel .inner small{display:block;font-weight:500;text-transform:none;letter-spacing:0;color:#6b6363;font-size:11.5px;margin-top:3px;}
+  .lane-touch .inner{border-left-color:var(--gold);}
+  .lane-feel .inner{border-left-color:var(--purple);}
+  .lane-pain .inner{border-left-color:var(--red);}
+  .lane-opp .inner{border-left-color:var(--green);}
+
+  .cell{padding:12px 8px;margin:0 5px;display:flex;flex-direction:column;gap:10px;}
+  .cardx{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:10px 12px 11px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .cardx h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--navy-deep);}
+  .cardx p{font-size:12.5px;color:#3d3838;}
+  .cardx ul{padding-left:16px;font-size:12.5px;color:#3d3838;}
+  .cardx li{margin:2px 0;}
+  .cardx .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .cardx.touch{background:#fffaf0;border-color:#f1de9d;}
+  .cardx.touch h4{color:#7a5b00;}
+  .cardx.pain{background:#fdf1f0;border-color:#f0c4bf;}
+  .cardx.pain h4{color:var(--red);}
+  .cardx.opp{background:#eefaf3;border-color:#bfe5cd;}
+  .cardx.opp h4{color:var(--green);}
+
+  .feelcard{
+    background:#f4f1fb;border:1px solid #d9d0ef;border-radius:8px;
+    padding:10px 12px 11px;font-size:12.5px;color:#3d3838;
+  }
+  .feelcard .mood{font-size:26px;line-height:1;margin-bottom:4px;display:block;}
+  .feelcard strong{display:block;font-size:12px;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .feelcard em{display:block;margin-top:5px;color:#5a5470;}
+
+  .panels{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;padding:0 40px 60px;max-width:1500px;
+  }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .panel h3{
+    font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:10px;border-bottom:3px solid var(--gold);
+    display:inline-block;padding-bottom:3px;
+  }
+  .panel ul{padding-left:18px;font-size:13.5px;}
+  .panel li{margin:6px 0;}
+  .panel.gapp h3{border-bottom-color:var(--red);}
+  .panel.openp h3{border-bottom-color:#1550b0;}
+
+  footer{background:var(--charcoal);color:#cfc8c8;font-size:12.5px;padding:18px 40px;}
+  footer strong{color:var(--gold);}
+  footer a{color:var(--gold);}
+  @media print{.legend{position:static;}.scroller{overflow:visible;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Journey map · Government official · Processing a case</span>
+  <h1>The official's journey — <span>from sign-in link to decision</span></h1>
+  <p class="meta">
+    <strong>An MDA officer</strong> (e.g. on the Ministry of Youth team running the science summer camp) processes applications in the case management system: sign in by emailed link, work a team-scoped queue, read each case, ask for anything missing, and set the status. Mapped from the CMS sandbox walkthrough — including what the system doesn't yet do for them: no notifications, no assignment, and a status model that may not match how their program really decides.
+  </p>
+</header>
+
+<div class="legend">
+  <span class="chip"><span class="tagchip tag-today">Works today</span> live in the sandbox</span>
+  <span class="chip"><span class="tagchip tag-gap">Gap</span> known break in the journey</span>
+  <span class="chip"><span class="tagchip tag-open">Open question</span> design not yet decided</span>
+</div>
+
+<div class="scroller">
+<div class="journey">
+
+  <div class="corner"></div>
+  <div class="stagehead"><div class="num">Stage 1</div><h2>Sign in</h2><p>Magic link, no password</p></div>
+  <div class="stagehead"><div class="num">Stage 2</div><h2>Scan the queue</h2><p>Everything for my programs</p></div>
+  <div class="stagehead"><div class="num">Stage 3</div><h2>Open a case</h2><p>Applicant details + raw form data</p></div>
+  <div class="stagehead"><div class="num">Stage 4</div><h2>Chase what's missing</h2><p>Request more information</p></div>
+  <div class="stagehead"><div class="num">Stage 5</div><h2>Decide</h2><p>Accept, reject — when the time comes</p></div>
+  <div class="stagehead"><div class="num">Stage 6</div><h2>Tidy up &amp; report</h2><p>Archive, export, administer</p></div>
+
+  <!-- DOING -->
+  <div class="lanelabel"><div class="inner">What they do<small>Actions &amp; behaviour</small></div></div>
+
+  <div class="cell">
+    <div class="cardx"><h4>Requests a sign-in link</h4><p>Types their email on the MDA's case management sign-in page, opens their inbox, clicks the link. No password, no single sign-on.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Reviews new arrivals</h4><p>Lands on the default view: all applications to the programs their team owns, newest first — but only because they chose to look. Nothing told them new cases arrived.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Reads the application</h4><p>Clicks through to the submission: applicant details on one side, everything the form collected on the other. Can hit “view applicant page” to see exactly what the citizen sees.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Types a question to the applicant</h4><p>Uses the request-more-information flow; the reply appears back on the case page and in the timeline. Text answers only.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Sets the status — on their own schedule</h4><p>Received → accepted or rejected. In practice a program lead like Justin may wait until all applications are in, allocate places, and approve everyone in one go.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx"><h4>Archives, exports, administers</h4><p>Archives decided cases to clear the main view; exports the program's applications to CSV; super admins manage users, teams and the Forms app API keys.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+
+  <!-- TOUCHPOINTS -->
+  <div class="lanelabel lane-touch"><div class="inner">Tools &amp; screens<small>What the system gives them</small></div></div>
+
+  <div class="cell">
+    <div class="cardx touch"><h4>Sign-in email</h4><p>A “welcome to case management” email with the link. Every session starts in the inbox.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>The queue</h4><p>Program, submission date, age of the submission, applicant name — reverse chronological. SLA ideas are written on the screen but are just text; nothing is measured or enforced.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Case detail page</h4><p>Applicant details plus the form data — currently jumbled together and genuinely difficult to read. Display improvements are planned. Status controls and the case timeline live here too.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Request-more-information flow</h4><p>Type the question, send; the emailed link brings the applicant's typed answer straight back onto the case, logged in the timeline with any status changes.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Status controls</h4><p>Four states: received, accepted, rejected, archived. Once approved, the only remaining action is archive. Changing a status sends the applicant nothing.</p><div class="tags"><span class="tagchip tag-gap">Gap</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx touch"><h4>Program page, teams &amp; API keys</h4><p>Export CSV per program; teams segment work so the creative camp team can't see science camp submissions; API keys configure the Forms app integration.</p><div class="tags"><span class="tagchip tag-today">Works today</span></div></div>
+  </div>
+
+  <!-- FEELING -->
+  <div class="lanelabel lane-feel"><div class="inner">Thinking &amp; feeling<small>Emotional journey</small></div></div>
+
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😐</span><strong>Mild friction</strong>“Off to my inbox again.”<em>Workable, but the team openly wants something better than magic links.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">🤔</span><strong>Uncertain ownership</strong>“Is anyone else already on this one? Am I supposed to take it?”<em>No assignment concept means every case belongs to everyone and no one.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😖</span><strong>Working too hard to read</strong>“It's all just… in one lump.”<em>The information is all there — the format fights them.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">🙂</span><strong>In control</strong>“Sent — and I'll see the answer right here when it comes.”<em>The strongest part of the staff experience.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">🤷</span><strong>Constrained</strong>“My process has more steps than these four statuses.”<em>EHD alone wants about four more states, mostly staff-side.</em></div>
+  </div>
+  <div class="cell">
+    <div class="feelcard"><span class="mood">😌</span><strong>Wrapped up — off the record</strong>“Queue's clear. Now to email everyone from the CSV…”<em>The real communication work happens outside the system.</em></div>
+  </div>
+
+  <!-- PAIN -->
+  <div class="lanelabel lane-pain"><div class="inner">Pain points<small>Where the journey breaks</small></div></div>
+
+  <div class="cell">
+    <div class="cardx pain"><h4>Inbox-dependent access</h4><p>Every sign-in routes through email; no SSO. Fine for occasional use, friction for daily casework.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>No notifications, no assignment</h4><p>Nobody is told when a case arrives or a response comes back; “who gets notified, who's assigned” is still undesigned. SLA display is decorative.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Unreadable form data</h4><p>The case page dumps the form payload in one jumbled block — slow to assess, easy to miss things.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Can't collect documents mid-case</h4><p>If the missing thing is a certificate rather than an answer, this loop can't carry it.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Statuses don't match real workflows</h4><p>Batch allocation (wait → allocate → approve all) and multi-step MDA processes don't fit received/accepted/rejected — and their decision sends the applicant no message.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx pain"><h4>Communication happens off-system</h4><p>Telling applicants the outcome, if it happens at all, happens outside the CMS — untracked and unrepeatable.</p></div>
+  </div>
+
+  <!-- OPPORTUNITIES -->
+  <div class="lanelabel lane-opp"><div class="inner">Opportunities<small>What would fix it</small></div></div>
+
+  <div class="cell">
+    <div class="cardx opp"><h4>Better sign-in</h4><p>Explore single sign-on or session-friendly auth for staff who live in the system daily.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Design notification &amp; assignment</h4><p>Decide who hears about new cases and responses, and what “this case is mine” means — then make the SLA column real.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Readable case view</h4><p>Structure the form data — sections, labels, uploaded documents surfaced — so assessment doesn't require decoding. Already flagged for improvement.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Documents on the info-request loop</h4><p>A small build once someone asks; the main form already supports uploads.</p></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Learn real decision workflows first</h4><p>Understand how each program lead actually decides (starting with Justin's batch allocation) before adding statuses — avoiding both bespoke one-offs and a generic Salesforce-style workflow engine. Keep it simple.</p><div class="tags"><span class="tagchip tag-open">Open question</span></div></div>
+  </div>
+  <div class="cell">
+    <div class="cardx opp"><h4>Make decisions communicate</h4><p>Status changes should trigger the applicant email themselves — the CMS can already send email; wiring it up is described as very straightforward.</p></div>
+  </div>
+
+</div>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <h3>What serves staff well today</h3>
+    <ul>
+      <li><strong>Automatic intake</strong> — submissions file themselves under the right program via the form code; no transcription, no sorting.</li>
+      <li><strong>Team-scoped queues</strong> — access controls keep each team's caseload separate within an MDA.</li>
+      <li><strong>The info-request loop</strong> — ask, and the answer comes back onto the case with a full timeline.</li>
+      <li><strong>“View applicant page”</strong> — empathy built in: see what the citizen sees before you act.</li>
+      <li><strong>CSV export</strong> for anything the system doesn't do yet.</li>
+    </ul>
+  </div>
+  <div class="panel gapp">
+    <h3>The core problem</h3>
+    <ul>
+      <li>The CMS is a good <strong>inbox</strong> but not yet a <strong>workflow tool</strong>: no notifications, no assignment, no real SLAs, and a four-state model that programs are already outgrowing.</li>
+      <li>Staff decisions are <strong>silent</strong> — approving or rejecting changes a page the applicant was never told about, so the accountability for communicating falls back on staff, off-system.</li>
+    </ul>
+  </div>
+  <div class="panel openp">
+    <h3>Questions to answer next</h3>
+    <ul>
+      <li>How do program leads actually decide (rolling vs batch) — the conversation planned with Justin?</li>
+      <li>Who gets notified on the staff side, and what does assignment look like?</li>
+      <li>Which intermediate statuses are shared across MDAs vs genuinely local — and where's the line before it becomes a workflow engine?</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Companions: <strong><a href="service-blueprint-case-management.html">Service blueprint — forms → decision</a></strong> · <strong><a href="journey-map-cms-applicant.html">Journey map — applicant after submitting a form</a></strong>. Source: case management system sandbox demo &amp; walkthrough transcript, July 2026.
+</footer>
+
+<script defer src="blueprint-comments.js"
+        data-page="cms-journey-official"
+        data-api="https://moe-job-letters.vercel.app/api/blueprint-comments"></script>
+
+</body>
+</html>

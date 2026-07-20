@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simplified service blueprint — Case management system</title>
+<style>
+  :root{
+    --navy:#00267F;
+    --navy-deep:#001a5c;
+    --gold:#FFC726;
+    --offwhite:#F7F3F3;
+    --charcoal:#2C2C2C;
+    --ink:#1a1a1a;
+    --line:#d8d2d2;
+    --red:#B42318;
+    --red-body:#8a2018;
+    --green:#1C7C43;
+    --lane-applicant:#ececec;
+    --lane-front:#e2f2f7;
+    --lane-back:#ffe9c4;
+    --lane-support:#ecdcf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.45;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:36px 40px 30px;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{
+    display:inline-block;background:var(--gold);color:var(--charcoal);
+    font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:3px;margin-bottom:14px;
+  }
+  header h1{font-size:clamp(24px,3.2vw,40px);font-weight:800;line-height:1.15;max-width:1100px;}
+  header h1 span{color:var(--gold);}
+  header .meta{margin-top:14px;font-size:14px;color:#cdd6f0;max-width:1050px;}
+  header .meta strong{color:#fff;}
+
+  .includes{
+    background:#fff9e3;border-bottom:1px solid #efe3ad;
+    padding:12px 40px;font-size:13.5px;color:#4a4436;
+    display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;
+  }
+  .includes .lead{font-weight:800;color:var(--charcoal);text-transform:uppercase;font-size:11.5px;letter-spacing:.08em;}
+  .includes .item{white-space:nowrap;}
+  .includes .item.build{color:var(--red);font-weight:600;}
+
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:14px 40px;background:#fff;border-bottom:1px solid var(--line);
+    color:var(--ink);font-size:13px;position:sticky;top:0;z-index:40;
+  }
+  .chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;flex:none;border:1px solid rgba(0,0,0,.12);}
+  .tagchip{
+    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 7px;border-radius:10px;display:inline-block;
+  }
+  .tag-build{background:#fde0dc;color:var(--red);}
+
+  .scroller{overflow-x:auto;padding:26px 24px 60px;}
+  .blueprint{
+    display:grid;
+    grid-template-columns:150px repeat(6, minmax(262px, 1fr));
+    min-width:1780px;
+  }
+  .stagehead{
+    background:var(--navy);color:#fff;padding:14px 16px 12px;
+    border-radius:8px 8px 0 0;margin:0 5px;
+  }
+  .stagehead .num{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+  .stagehead h2{font-size:16px;font-weight:800;line-height:1.25;margin-top:2px;}
+  .stagehead p{font-size:12px;color:#c3cdea;margin-top:4px;}
+  .corner{background:transparent;}
+
+  .lanelabel{
+    position:sticky;left:0;z-index:20;background:var(--offwhite);
+    padding:14px 12px 14px 2px;display:flex;align-items:flex-start;
+  }
+  .lanelabel .inner{
+    font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--charcoal);border-left:5px solid #9a9a9a;padding-left:9px;line-height:1.3;
+  }
+  .lanelabel .inner small{display:block;font-weight:500;text-transform:none;letter-spacing:0;color:#6b6363;font-size:11.5px;margin-top:3px;}
+  .lane-applicant .inner{border-left-color:#9a9a9a;}
+  .lane-front .inner{border-left-color:#39a7c4;}
+  .lane-back .inner{border-left-color:#e0a53c;}
+  .lane-support .inner{border-left-color:#9a63c4;}
+
+  .cell{padding:12px 8px;margin:0 5px;display:flex;flex-direction:column;gap:10px;}
+  .cardx{
+    border:1px solid rgba(0,0,0,.08);border-radius:8px;
+    padding:10px 12px 11px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);
+    background:#fff;
+  }
+  .cardx h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--navy-deep);}
+  .cardx p{font-size:12.5px;color:#3d3838;}
+  .cardx p + p{margin-top:6px;}
+  .cardx .tags{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+  .row-applicant .cardx{background:var(--lane-applicant);}
+  .row-front .cardx{background:var(--lane-front);}
+  .row-back .cardx{background:var(--lane-back);}
+  .row-support .cardx{background:var(--lane-support);}
+  .cardx.build{
+    outline:2px solid var(--red);outline-offset:-1px;
+  }
+  .cardx.build h4{color:var(--red);}
+  .cardx.build p{color:var(--red-body);}
+
+  .bline{grid-column:1 / -1;display:flex;align-items:center;gap:12px;padding:6px 5px;}
+  .bline .rule{flex:1;border-top:2px dashed var(--charcoal);opacity:.55;}
+  .bline .label{
+    font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--charcoal);background:var(--offwhite);padding:0 4px;position:sticky;left:0;
+  }
+
+  .panels{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:18px;padding:0 40px 60px;max-width:1500px;
+  }
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .panel h3{
+    font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:10px;border-bottom:3px solid var(--gold);
+    display:inline-block;padding-bottom:3px;
+  }
+  .panel ul{padding-left:18px;font-size:13.5px;}
+  .panel li{margin:6px 0;}
+  .panel.buildp h3{border-bottom-color:var(--red);}
+  .panel.todayp h3{border-bottom-color:var(--green);}
+
+  footer{background:var(--charcoal);color:#cfc8c8;font-size:12.5px;padding:18px 40px;}
+  footer strong{color:var(--gold);}
+  footer a{color:var(--gold);}
+  @media print{.legend{position:static;}.scroller{overflow:visible;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow">Simplified service blueprint · Forms app → case management</span>
+  <h1>Case management — <span>the simple version</span>: six phases, four lanes</h1>
+  <p class="meta">
+    <strong>GovTech Barbados Forms app × Case Management System (CaMS).</strong>
+    One card per moment: what the applicant does, what they see, what the MDA does behind the scenes, and what the systems do underneath. Black cards work today. <strong style="color:#ffb3a9">Red-outlined cards are to build</strong> — functions that aren't fully functional yet but must be for this to work well for the applicant and the MDA.
+  </p>
+</header>
+
+<div class="includes">
+  <span class="lead">The CMS includes:</span>
+  <span class="item">MDA side to update status ✓</span>
+  <span class="item build">Citizen side to check status</span>
+  <span class="item build">Email service on statuses</span>
+  <span class="item build">Digital copies of licenses / certificates etc</span>
+</div>
+
+<div class="legend">
+  <span class="chip"><span class="swatch" style="background:var(--lane-applicant)"></span>Applicant actions</span>
+  <span class="chip"><span class="swatch" style="background:var(--lane-front)"></span>Front stage</span>
+  <span class="chip"><span class="swatch" style="background:var(--lane-back)"></span>Back stage</span>
+  <span class="chip"><span class="swatch" style="background:var(--lane-support)"></span>Systems &amp; support</span>
+  <span class="chip"><span class="tagchip tag-build">To build</span> needed, not fully functional today</span>
+</div>
+
+<div class="scroller">
+<div class="blueprint">
+
+  <div class="corner"></div>
+  <div class="stagehead"><div class="num">Phase 1</div><h2>Submit</h2><p>The form is sent</p></div>
+  <div class="stagehead"><div class="num">Phase 2</div><h2>Handoff &amp; confirmation</h2><p>Forms app → CaMS</p></div>
+  <div class="stagehead"><div class="num">Phase 3</div><h2>Triage &amp; review</h2><p>The team picks it up</p></div>
+  <div class="stagehead"><div class="num">Phase 4</div><h2>More information</h2><p>Optional loop</p></div>
+  <div class="stagehead"><div class="num">Phase 5</div><h2>Decision</h2><p>Accepted or rejected</p></div>
+  <div class="stagehead"><div class="num">Phase 6</div><h2>Closure</h2><p>Collect, then close</p></div>
+
+  <!-- APPLICANT ACTIONS -->
+  <div class="lanelabel lane-applicant"><div class="inner">Applicant actions<small>What the citizen does</small></div></div>
+
+  <div class="cell row-applicant">
+    <div class="cardx"><p>Completes and submits the online form (documents can be attached here).</p></div>
+  </div>
+  <div class="cell row-applicant">
+    <div class="cardx"><p>Receives submission email with a reference ID and contact details.</p></div>
+  </div>
+  <div class="cell row-applicant">
+    <div class="cardx"><p>Waits.</p></div>
+  </div>
+  <div class="cell row-applicant">
+    <div class="cardx"><p>Receives emailed question, follows link, types a text-only response.</p></div>
+    <div class="cardx build"><h4>Document upload in responses</h4><p>Consider including a document upload function, for when the missing thing is a certificate rather than an answer.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-applicant">
+    <div class="cardx build"><h4>Email after every decision</h4><p>Email sent to the applicant after approval or rejection. If rejected, the email includes contact details so it isn't a dead end.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-applicant">
+    <div class="cardx build"><h4>Digital copy — original if needed</h4><p>Receives a digital copy of the licence / certificate by email. For documents where the original matters (birth, death, marriage certificates), they're told they can also collect it in person.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of interaction</span><span class="rule"></span></div>
+
+  <!-- FRONT STAGE -->
+  <div class="lanelabel lane-front"><div class="inner">Front stage<small>Touch points the citizen sees</small></div></div>
+
+  <div class="cell row-front">
+    <div class="cardx"><p>Forms app — the published form.</p></div>
+  </div>
+  <div class="cell row-front">
+    <div class="cardx"><p>Forms app email: “your form has been submitted” + ID.</p></div>
+    <div class="cardx build"><h4>Link to track the application</h4><p>The submission email should also include the link to the track-application page.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-front">
+    <div class="cardx build"><h4>A front door to check status</h4><p>Create an entryway for the applicant to reach their status page — today the page exists but the link is never given out.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-front">
+    <div class="cardx"><p>Email + response form — question emailed, response comes back via the linked form.</p></div>
+  </div>
+  <div class="cell row-front">
+    <div class="cardx"><p>Status page updated to approved / not successful.</p></div>
+  </div>
+  <div class="cell row-front">
+    <div class="cardx build"><h4>Honest closing states</h4><p>For physical items the status page shows “ready for collection” until the original is picked up — only then “your case has been closed”. A closed case with an uncollected certificate would read as wrong.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of visibility</span><span class="rule"></span></div>
+
+  <!-- BACK STAGE -->
+  <div class="lanelabel lane-back"><div class="inner">Back stage<small>MDA actions invisible to the citizen</small></div></div>
+
+  <div class="cell row-back">
+    <div class="cardx build"><h4>Notify the MDA officer</h4><p>Email the MDA officer to notify them of a new application — deciding who on the staff side is notified when a submission is handed off to CaMS.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-back">
+    <div class="cardx"><p>MDA officer logs in and the case appears in the team's queue as “Received”, reverse-chronological.</p></div>
+  </div>
+  <div class="cell row-back">
+    <div class="cardx"><p>Officer opens the submission: applicant details + form data.</p></div>
+    <div class="cardx build"><h4>Redesign the case page</h4><p>Redesign the applicant details and form data page — the data is jumbled and hard to read.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+    <div class="cardx build"><h4>Case roles</h4><p>Define whether the person managing the case is the same person reviewing it and approving it.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-back">
+    <div class="cardx"><p>Officer types a question in the request-more-information flow; the response lands in the case timeline.</p></div>
+  </div>
+  <div class="cell row-back">
+    <div class="cardx"><p>Officer sets the application as Accepted or Rejected.</p></div>
+    <div class="cardx build"><h4>Roles &amp; permissions</h4><p>Decide who can accept / reject, and how roles are assigned to different MDA officers — today anyone on the team can do anything.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-back">
+    <div class="cardx"><p>Officer archives the case, hiding it from the main queue; can export the program's applications as CSV.</p></div>
+    <div class="cardx build"><h4>No archiving before collection</h4><p>For applications with a physical item, the case can't be archived until it's collected — a “Ready for collection” state after Approved that CaMS has to account for.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+
+  <div class="bline"><span class="label">Line of internal interaction</span><span class="rule"></span></div>
+
+  <!-- SYSTEMS & SUPPORT -->
+  <div class="lanelabel lane-support"><div class="inner">Systems &amp; support<small>Processes behind the scenes</small></div></div>
+
+  <div class="cell row-support">
+    <div class="cardx"><p>Forms app generates the submission ID at the point of submission.</p></div>
+    <div class="cardx build"><h4>One reference ID</h4><p>Ensure the ref ID in CaMS matches the one in the forms app — or CaMS generates the ID itself at handoff.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-support">
+    <div class="cardx"><p>API integration — forms app posts to the CaMS with the program code.</p></div>
+    <div class="cardx build"><h4>CaMS sends all emails</h4><p>Move all applicant communication to CaMS: no lag window for over-eager applicants who check status the moment they submit, every message comes from one place, and the forms app no longer needs to know what happened after handoff.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-support">
+    <div class="cardx"><p>Statuses: Received → Accepted / Rejected / Archived.</p></div>
+    <div class="cardx build"><h4>“Ready for collection” status</h4><p>An additional state after Approved for application types that end in a physical item.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+  <div class="cell row-support">
+    <div class="cardx"><p>Responses are text-only.</p></div>
+  </div>
+  <div class="cell row-support">
+    <div class="cardx"><p>Program = form (one program could span multiple forms / seasons later).</p></div>
+  </div>
+  <div class="cell row-support">
+    <div class="cardx"><p>Teams &amp; access controls — super admin creates teams; a team only sees its own programs.</p></div>
+    <div class="cardx build"><h4>Status feedback to the forms app</h4><p>Tell the forms app when statuses change or a case is archived — more a future thing, but useful for catching duplicate applications.</p><div class="tags"><span class="tagchip tag-build">To build</span></div></div>
+  </div>
+
+</div>
+</div>
+
+<div class="panels">
+  <div class="panel todayp">
+    <h3>Working today</h3>
+    <ul>
+      <li>Published forms with document upload, submission ID and confirmation email.</li>
+      <li>API handoff to CaMS with the program code; cases file themselves into the right team's queue.</li>
+      <li>Request-more-information loop with the response logged in the case timeline.</li>
+      <li>Status changes (Received → Accepted / Rejected / Archived), archive, CSV export, teams &amp; access controls.</li>
+    </ul>
+  </div>
+  <div class="panel buildp">
+    <h3>To build — for this to work well</h3>
+    <ul>
+      <li><strong>CaMS owns communication:</strong> one reference ID, staff notified on handoff, applicant emailed on every status change — rejection emails with contact details.</li>
+      <li><strong>A front door:</strong> the tracking link shared in the confirmation email and a citizen side to check status.</li>
+      <li><strong>Physical items handled honestly:</strong> digital copies by email, a “Ready for collection” state after Approved, no archiving until the original is picked up.</li>
+      <li><strong>Case workflow:</strong> roles &amp; permissions for managing / reviewing / approving, a redesigned case detail page, document upload in responses.</li>
+      <li><strong>Looking ahead:</strong> status feedback to the forms app to catch duplicate applications.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Companions: <strong><a href="service-blueprint-case-management.html">Detailed blueprint — forms → decision</a></strong> · <strong><a href="journey-map-cms-applicant.html">Journey map — applicant</a></strong> · <strong><a href="journey-map-cms-official.html">Journey map — official</a></strong>. Source: simplified service blueprint on the GovTech Barbados Phase 3 Miro board + comment threads, July 2026.
+</footer>
+
+<script defer src="blueprint-comments.js"
+        data-page="cms-blueprint-simplified"
+        data-api="https://moe-job-letters.vercel.app/api/blueprint-comments"></script>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 .DS_Store
 pdf forms/
 service pattern documents/
-.claude/
+.claude/*
+!.claude/skills/
